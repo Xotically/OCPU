@@ -66,8 +66,8 @@ exports.commands = {
 		user.updateIdentity();
 		user.isAway = true;
 		return this.parse('/hide');
-		return this.parse('/blockpm');
-		return this.parse('/blockchallenges');
+		this.parse('/blockpm');
+		this.parse('/blockchallenges');
 	},
 
 	back: function (target, room, user) {
@@ -92,8 +92,8 @@ exports.commands = {
 			this.add("|raw|-- <font color='" + nameColor(user.userid) + "'><strong>" + Tools.escapeHTML(newName) + "</strong></font> is no longer away for " + status.toLowerCase() + ".");
 		}
 		return this.parse('/show');
-		return this.parse('/unblockpm');
-		return this.parse('/unblockchallenges');
+		this.parse('/unblockpm');
+		this.parse('/unblockchallenges');
 	},
 
 	afk: function (target, room, user) {
