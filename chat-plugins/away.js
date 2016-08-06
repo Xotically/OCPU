@@ -65,9 +65,9 @@ exports.commands = {
 		user.forceRename(newName, user.registered);
 		user.updateIdentity();
 		user.isAway = true;
-		return this.parse('/hide');
-		return this.parse('/blockpm');
-		return this.parse('/blockchallenges');
+		this.parse('/hide');
+		this.parse('/blockpm');
+		this.parse('/blockchallenges');
 	},
 
 	back: function (target, room, user) {
@@ -91,9 +91,9 @@ exports.commands = {
 		if (user.isStaff) {
 			this.add("|raw|-- <font color='" + nameColor(user.userid) + "'><strong>" + Tools.escapeHTML(newName) + "</strong></font> is no longer away for " + status.toLowerCase() + ".");
 		}
-		return this.parse('/show');
-		return this.parse('/unblockpm');
-		return this.parse('/unblockchallenges');
+		this.parse('/show');
+		this.parse('/unblockpm');
+		this.parse('/unblockchallenges');
 	},
 
 	afk: function (target, room, user) {

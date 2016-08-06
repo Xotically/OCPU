@@ -243,6 +243,14 @@ exports.commands = {
 		message = '|pm|' + user.getIdentity() + '|' + targetUser.getIdentity() + '|' + target;
 
 		if (!message) message = '|pm|' + user.getIdentity() + '|' + targetUser.getIdentity() + '|' + target;
+		if (message.includes('psim.us')) {
+			if (Rooms.get('staff')) {
+				Rooms.get('staff').add('|raw|<div class="broadcast-red">'user.name + ' has advertised in a PM.</div>').update();
+			}
+			if (Rooms.get('upperstaff')) {
+				Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">'user.name + ' has advertised in a PM.</div>').update();
+			}
+		}
 		user.send(message);
 		if (targetUser !== user) targetUser.send(message);
 		targetUser.lastPM = user.userid;
@@ -430,7 +438,7 @@ exports.commands = {
 		}
 		
 		// Test
-		Rooms.get('staff').add('|raw|<div class="broadcast-green">Private groupchat room created: <b>' + Tools.escapeHTML(target) + '</b></div>').update();
+		Rooms.get('staff').add('|raw|<div class="broadcast-green">Private groupchat room created: <b>' + Tools.escapeHTML(target) + '</b></div>');
 		return this.errorReply("An unknown error occurred while trying to create the room '" + title + "'.");
 	},
 	makegroupchathelp: ["/makegroupchat [roomname], [hidden|private] - Creates a group chat named [roomname]. Leave off privacy to default to hidden. Requires global voice or roomdriver+ in a public room to make a groupchat."],
@@ -1735,7 +1743,7 @@ exports.commands = {
 		
 		Rooms.get("staff").add(user.name + " has set modchat to " + room.modchat + " in " + room.id + ".");
 	},
-	modchathelp: ["/modchat [off/autoconfirmed/+/%/@/#/&/~] - Set the level of moderated chat. Requires: @ for off/autoconfirmed/+ options, # & ~ for all the options"],
+	modchathelp: ["/modchat [off/autoconfirmed/+/%/@/*/#/&/~] - Set the level of moderated chat. Requires: @ * for off/autoconfirmed/+ options, # & ~ for all the options"],
 
 	declare: function (target, room, user) {
 		if (!target) return this.parse('/help declare');
@@ -1745,7 +1753,7 @@ exports.commands = {
 		this.add('|raw|<div class="broadcast-blue"><b>' + Tools.escapeHTML(target) + '</b></div>');
 		this.logModCommand(user.name + " declared " + target);
 	},
-	declarehelp: ["/declare [message] - Anonymously announces a message. Requires: # & ~"],
+	declarehelp: ["/declare [message] - Anonymously announces a message. Requires: * # & ~"],
 
 	htmldeclare: function (target, room, user) {
 		if (!target) return this.parse('/help htmldeclare');
@@ -1798,7 +1806,7 @@ exports.commands = {
 
 		return '/announce ' + target;
 	},
-	announcehelp: ["/announce OR /wall [message] - Makes an announcement. Requires: % @ # & ~"],
+	announcehelp: ["/announce OR /wall [message] - Makes an announcement. Requires: % @ * # & ~"],
 
 	fr: 'forcerename',
 	forcerename: function (target, room, user) {
@@ -1822,7 +1830,7 @@ exports.commands = {
 		targetUser.send("|nametaken||" + user.name + " considers your name inappropriate" + (reason ? ": " + reason : "."));
 		return true;
 	},
-	forcerenamehelp: ["/forcerename OR /fr [username], [reason] - Forcibly change a user's name and shows them the [reason]. Requires: % @ & ~"],
+	forcerenamehelp: ["/forcerename OR /fr [username], [reason] - Forcibly change a user's name and shows them the [reason]. Requires: % @ * & ~"],
 
 	nl: 'namelock',
 	namelock: function (target, room, user) {
@@ -1844,7 +1852,7 @@ exports.commands = {
 		targetUser.popup("|modal|" + user.name + " has locked your name and you can't change names anymore" + (reason ? ": " + reason : "."));
 		return true;
 	},
-	namelockhelp: ["/namelock OR /nl [username], [reason] - Name locks a user and shows them the [reason]. Requires: % @ & ~"],
+	namelockhelp: ["/namelock OR /nl [username], [reason] - Name locks a user and shows them the [reason]. Requires: % @ * & ~"],
 
 	unl: 'unnamelock',
 	unnamelock: function (target, room, user) {
@@ -1867,7 +1875,7 @@ exports.commands = {
 			this.errorReply("User '" + target + "' is not namelocked.");
 		}
 	},
-	unnamelockhelp: ["/unnamelock [username] - Unnamelocks the user. Requires: % @ & ~"],
+	unnamelockhelp: ["/unnamelock [username] - Unnamelocks the user. Requires: % @ * & ~"],
 
 	hidetext: function (target, room, user) {
 		if (!target) return this.parse('/help hidetext');
@@ -1895,7 +1903,7 @@ exports.commands = {
 		this.add('|unlink|' + hidetype + userid);
 		if (userid !== toId(this.inputUsername)) this.add('|unlink|' + hidetype + toId(this.inputUsername));
 	},
-	hidetexthelp: ["/hidetext [username] - Removes a locked or banned user's messages from chat (includes users banned from the room). Requires: % (global only), @ # & ~"],
+	hidetexthelp: ["/hidetext [username] - Removes a locked or banned user's messages from chat (includes users banned from the room). Requires: % (global only), @ * # & ~"],
 
 	banwords: 'banword',
 	banword: {
