@@ -65,7 +65,7 @@ exports.commands = {
 		user.forceRename(newName, user.registered);
 		user.updateIdentity();
 		user.isAway = true;
-		return this.parse('/hide');
+		this.parse('/hide');
 		this.parse('/blockpm');
 		this.parse('/blockchallenges');
 	},
@@ -91,7 +91,7 @@ exports.commands = {
 		if (user.isStaff) {
 			this.add("|raw|-- <font color='" + nameColor(user.userid) + "'><strong>" + Tools.escapeHTML(newName) + "</strong></font> is no longer away for " + status.toLowerCase() + ".");
 		}
-		return this.parse('/show');
+		this.parse('/show');
 		this.parse('/unblockpm');
 		this.parse('/unblockchallenges');
 	},
