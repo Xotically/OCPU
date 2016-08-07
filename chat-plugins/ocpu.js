@@ -747,7 +747,7 @@ exports.commands = {
 		if (!targetUser) return this.sendReply('There is no user named ' + this.targetUsername + '.');
 		if (!target) return this.sendReply('/givebadge [user], [badge] - Gives a badge to a user. Requires: &~');
 		let type_of_badges = ['admin', 'bot', 'dev', 'vip', 'mod', 'artist', 'leader', 'champ', 'creator', 'comcun', 'twinner', 'league', 'fgs'];
-		if (type_of_badges.indexOf(target) > -1 === false) return this.sendReply('Ther is no badge named ' + target + '.');
+		if (type_of_badges.indexOf(target) > -1 === false) return this.sendReply('There is no badge named ' + target + '.');
 		fs.readFile('badges.txt', 'utf8', (err, data) => {
 			if (err) console.log(err);
 			let currentbadges = '';
