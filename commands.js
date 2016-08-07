@@ -445,7 +445,7 @@ exports.commands = {
 		}
 		
 		// Test
-		Rooms.get('staff').add('|raw|<div class="broadcast-green">Private groupchat room created: <b>' + Tools.escapeHTML(target) + '</b></div>');
+		Rooms.get('staff').add('|raw|<div class="broadcast-green">Private groupchat room created: <b>' + Tools.escapeHTML(target) + '</b></div>').update();
 		return this.errorReply("An unknown error occurred while trying to create the room '" + title + "'.");
 	},
 	makegroupchathelp: ["/makegroupchat [roomname], [hidden|private] - Creates a group chat named [roomname]. Leave off privacy to default to hidden. Requires global voice or roomdriver+ in a public room to make a groupchat."],
