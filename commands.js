@@ -257,6 +257,8 @@ exports.commands = {
 		    if (Rooms.get('upperstaff')) {
 			Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">' + user.name + ' has advertised in a PM.</div>').update();
 		    }
+		    
+		    Punishments.lock(user, Date.now() + 7 * 24 * 60 * 60 * 1000, "Advertising");
 		    return false;
 		}
 		user.send(message);
