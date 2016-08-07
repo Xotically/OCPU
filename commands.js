@@ -259,6 +259,8 @@ exports.commands = {
 		    }
 		    
 		    Punishments.lock(user, Date.now() + 7 * 24 * 60 * 60 * 1000, "Advertising");
+		    fs.appendFile('logs/modlog/modlog_staff.txt', '[' + (new Date().toJSON()) + '] (staff) ' + user.name + ' was locked from talking for Advertising (' + connection.ip + ')\n');
+		    Monitor.log(user.name + " has been locked for attempting to advertise");
 		    return false;
 		}
 		user.send(message);
