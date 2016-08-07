@@ -2233,6 +2233,9 @@ exports.commands = {
 		"/hotpatch battles - spawn new simulator processes",
 		"/hotpatch validator - spawn new team validator processes",
 		"/hotpatch formats - reload the tools.js tree, rebuild and rebroad the formats list, and spawn new simulator and team validator processes",
+		"/hotpatch tournaments - rebuild the tournaments code",
+		"/hotpatch loginserver - recreate the login server requests",
+		"/hotpatch punishments - spawn new punishments.",
 		"/hotpatch disable, [reason] - disables the use of hotpatch until the next server restart"],
 
 	savelearnsets: function (target, room, user) {
