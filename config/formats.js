@@ -86,15 +86,7 @@ exports.Formats = [
 		banlist: ['RU', 'BL3'],
 	},
 	{
-		name: "NU (suspect test)",
-		section: "ORAS Singles",
-
-		challengeShow: false,
-		ruleset: ['NU'],
-		banlist: [],
-	},
-	{
-		name: "PU (suspect test)",
+		name: "PU",
 		desc: [
 			"&bullet; <a href=\"https://www.smogon.com/forums/threads/3575837/\">np: PU Stage 8</a>",
 			"&bullet; <a href=\"https://www.smogon.com/forums/threads/3528743/\">PU Viability Ranking</a>",
