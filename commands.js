@@ -1754,9 +1754,9 @@ exports.commands = {
 		}
 		
 		if (room.modchat == "~") {
-			Rooms.get("staff").add('|raw|<div class="broadcast-red"> ' user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>');
+			Rooms.get("staff").add('|raw|<div class="broadcast-red"> ' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>');
 		} else {
-			Rooms.get("staff").add('|raw|<div class="broadcast-yellow"> ' user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>');
+			Rooms.get("staff").add('|raw|<div class="broadcast-yellow"> ' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>');
 		}
 		
 	},
