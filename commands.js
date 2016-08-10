@@ -1753,7 +1753,12 @@ exports.commands = {
 			Rooms.global.writeChatRoomData();
 		}
 		
-		Rooms.get("staff").add(user.name + " has set modchat to " + room.modchat + " in " + room.id + ".");
+		if (room.modchat == "~") {
+			Rooms.get("staff").add('|raw|<div class="broadcast-red"> ' user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>');
+		} else {
+			Rooms.get("staff").add('|raw|<div class="broadcast-yellow"> ' user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>');
+		}
+		
 	},
 	modchathelp: ["/modchat [off/autoconfirmed/+/%/@/*/#/&/~] - Set the level of moderated chat. Requires: @ * for off/autoconfirmed/+ options, # & ~ for all the options"],
 
