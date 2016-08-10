@@ -1753,7 +1753,12 @@ exports.commands = {
 			Rooms.global.writeChatRoomData();
 		}
 		
-		Rooms.get("staff").add(user.name + " has set modchat to " + room.modchat + " in " + room.id + ".");
+		if (room.modchat == "~") {
+			Rooms.get("staff").add('|raw|<div class="broadcast-red"> ' user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>');
+		} else {
+			Rooms.get("staff").add('|raw|<div class="broadcast-yellow"> ' user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>');
+		}
+		
 	},
 	modchathelp: ["/modchat [off/autoconfirmed/+/%/@/*/#/&/~] - Set the level of moderated chat. Requires: @ * for off/autoconfirmed/+ options, # & ~ for all the options"],
 
@@ -2336,6 +2341,7 @@ exports.commands = {
 			return this.errorReply("We're already in emergency mode.");
 		}
 		Config.emergency = true;
+		Config.pmmodchat = '+';
 		for (let id in Rooms.rooms) {
 			if (id !== 'global') Rooms.rooms[id].addRaw("<div class=\"broadcast-red\">The server has entered emergency mode. Some features might be disabled or limited.</div>");
 		}
@@ -2350,6 +2356,7 @@ exports.commands = {
 			return this.errorReply("We're not in emergency mode.");
 		}
 		Config.emergency = false;
+		Config.pmmodchat = false;
 		for (let id in Rooms.rooms) {
 			if (id !== 'global') Rooms.rooms[id].addRaw("<div class=\"broadcast-green\"><b>The server is no longer in emergency mode.</b></div>");
 		}

@@ -671,20 +671,19 @@ exports.commands = {
 	credits: function (target, room, user) {
 		let popup = "|html|" + "<font size=5> Server Credits</font><br />" +
 					"<u>Owners:</u><br />" +
-					"- " + nameColor('zellman01', true) + " (Founder, Sysadmin, Development, Lead Policy, Owner of GitHub repository)<br />" +
+					"- " + nameColor('zellman01', true) + " (Founder, Sysadmin, Development, Owner of GitHub repository)<br />" +
 					"<br />" +
 					"<u>Development:</u><br />" +
-					"- " + nameColor('Rainy Thunder', true) + " (Contributor, Lead Development)<br />" +
+					"- " + nameColor('Rainy Thunder', true) + " (Contributor, Lead Development, Lead Policy)<br />" +
 					"- " + nameColor('Mystifi', true) + " (Contributor, Development)<br />" +
-					"- " + nameColor('sir vaq', true) + " (Contributor)<br />" +
-					"- " + nameColor('Alpha Paul71', true) + " (Server CSS)<br />" +
+					"- " + nameColor('VAQ', true) + " (Contributor)<br />" +
+					"- " + nameColor('Co-Champ Salt', true) + " (Server CSS)<br />" +
 					"<br />" +
 					"<u>Special Thanks:</u><br />" +
 					"- Current staff team<br />" +
 					"- Our regular users<br />" +
 					"<br />" +
 					"<u>Retired Staff:</u><br />" +
-					"- " + nameColor('Solarstatics', true) + " (Former Administrator)<br />";
 		user.popup(popup);
 	},
 	/*regdate: function (target, room, user, connection) {
