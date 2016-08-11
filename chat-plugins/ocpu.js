@@ -683,7 +683,7 @@ exports.commands = {
 					"- Current staff team<br />" +
 					"- Our regular users<br />" +
 					"<br />" +
-					"<u>Retired Staff:</u><br />" +
+					"<u>Retired Staff:</u><br />"
 		user.popup(popup);
 	},
 	/*regdate: function (target, room, user, connection) {
