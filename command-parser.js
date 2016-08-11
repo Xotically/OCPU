@@ -109,8 +109,35 @@ class CommandContext {
 		this.user = options.user || null;
 		this.connection = options.connection || null;
 
-		this.targetUserName = '';
 		this.targetUser = null;
+		this.targetUsername = '';
+		this.inputUsername = '';
+	}
+
+	checkFormat(room, message) {
+		if (!room) return false;
+		if (!room.filterStretching && !room.filterCaps) return false;
+		let formatError = false;
+		// Removes extra spaces and null characters
+		message = message.trim().replace(/[ \u0000\u200B-\u200F]+/g, ' ');
+
+		let stretchMatch = room.filterStretching && message.match(/(.+?)\1{7,}/i);
+		let capsMatch = room.filterCaps && message.match(/[A-Z\s]{18,}/);
+		if (stretchMatch) {
+			formatError = "too much stretching.";
+		}
+		if (capsMatch) {
+			formatError = "too many capital letters.";
+		}
+		if (stretchMatch && capsMatch) formatError = "too much stretching and too many capital letters.";
+		return formatError;
+	}
+
+	checkSlowchat(room, user) {
+		if (!room || !room.slowchat) return true;
+		let lastActiveSeconds = (Date.now() - user.lastMessageTime) / 1000;
+		if (lastActiveSeconds < room.slowchat) return false;
+		return true;
 	}
 
 	checkBanwords(room, message) {
@@ -143,8 +170,11 @@ class CommandContext {
 			this.sendReply('|html|<div class="message-error">' + Tools.escapeHTML(message).replace(/\n/g, '<br />') + '</div>');
 		}
 	}
+	addBox(html) {
+		this.add('|html|<div class="infobox">' + html + '</div>');
+	}
 	sendReplyBox(html) {
-		this.sendReply('|raw|<div class="infobox">' + html + '</div>');
+		this.sendReply('|html|<div class="infobox">' + html + '</div>');
 	}
 	popupReply(message) {
 		this.connection.popup(message);
@@ -320,12 +350,8 @@ class CommandContext {
 			}
 			if (room && room.modchat) {
 				let userGroup = user.group;
-				if (room.auth && !user.can('makeroom')) {
-					if (room.auth[user.userid]) {
-						userGroup = room.auth[user.userid];
-					} else if (room.isPrivate === true) {
-						userGroup = ' ';
-					}
+				if (!user.can('makeroom')) {
+					userGroup = room.getAuth(user);
 				}
 				if (room.modchat === 'autoconfirmed') {
 					if (!user.autoconfirmed && userGroup === ' ') {
@@ -363,14 +389,24 @@ class CommandContext {
 				return false;
 			}
 
+			if (this.checkFormat(room, message) && !user.can('mute', null, room)) {
+				this.errorReply("Your message was not sent because it contained " + this.checkFormat(room, message));
+				return false;
+			}
+
+			if (!this.checkSlowchat(room, user) && !user.can('mute', null, room)) {
+				this.errorReply("This room has slow-chat enabled. You can only talk once every " + room.slowchat + " seconds.");
+				return false;
+			}
+
 			if (!this.checkBanwords(room, message) && !user.can('mute', null, room)) {
 				this.errorReply("Your message contained banned words.");
 				return false;
 			}
 
-			if (room && room.id === 'lobby') {
+			if (room) {
 				let normalized = message.trim();
-				if ((normalized === user.lastMessage) &&
+				if (room.id === 'lobby' && (normalized === user.lastMessage) &&
 						((Date.now() - user.lastMessageTime) < MESSAGE_COOLDOWN)) {
 					this.errorReply("You can't send the same message again so soon.");
 					return false;
