@@ -261,6 +261,22 @@ let Room = (() => {
 		user.updateIdentity(this.id);
 		return userid;
 	};
+	
+	Room.prototype.getAuth = function (user) {
+		if (this.auth) {
+			if (user.userid in this.auth) {
+				return this.auth[user.userid];
+			}
+			if (this.tour && this.tour.room) {
+				return this.tour.room.getAuth(user);
+			}
+			if (this.isPrivate === true) {
+				return ' ';
+			}
+		}
+		return user.group;
+	};
+	
 	Room.prototype.unmute = function (userid, notifyText) {
 		let successUserid = false;
 		let user = Users.get(userid);
