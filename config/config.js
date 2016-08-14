@@ -268,14 +268,6 @@ exports.grouplist = [
 		globalonly: true,
 	},
 	{
-		symbol: '*',
-		id: "bot",
-		name: "Bot",
-		inherit: '@',
-		jurisdiction: 'u',
-		declare: true,
-	},
-	{
 		symbol: '#',
 		id: "owner",
 		name: "Room Owner",
@@ -313,6 +305,14 @@ exports.grouplist = [
 		disableladder: true,
 		tournamentsmanagement: true,
 		gamemanagement: true,
+	},
+	{
+		symbol: '*',
+		id: "bot",
+		name: "Bot",
+		inherit: '@',
+		jurisdiction: '&#u',
+		declare: true,
 	},
 	{
 		symbol: '@',
