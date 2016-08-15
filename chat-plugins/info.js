@@ -1674,7 +1674,21 @@ exports.commands = {
 
 		this.sendReplyBox(target);
 	},
-	htmlboxhelp: ["/htmlbox [message] - Displays a message, parsing HTML code contained. Requires: ~ # with global authority"],
+	
+	addhtmlbox: function (target, room, user, connection, cmd, message) {
+		if (!target) return this.parse('/help htmlbox');
+		if (!this.canTalk()) return this.errorReply("You cannot do this while unable to talk.");
+		target = this.canHTML(target);
+		if (!target) return;
+		if (!this.can('addhtml', null, room)) return;
+
+		if (!user.can('addhtml')) {
+			target += '<div style="float:right;color:#888;font-size:8pt">[' + Tools.escapeHTML(user.name) + ']</div><div style="clear:both"></div>';
+		}
+
+		this.addBox(target);
+	},
+	htmlboxhelp: ["/htmlbox [message] - Displays a message, parsing HTML code contained. Requires: ~ # * with global authority OR * with room authority"],
 };
 
 process.nextTick(() => Tools.includeData());
