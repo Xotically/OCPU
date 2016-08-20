@@ -636,7 +636,7 @@ exports.commands = {
 			this.sendReplyBox("The room description is: " + Tools.escapeHTML(room.desc));
 			return;
 		}
-		if (!this.can('declare')) return false;
+		if (!this.can('declare', null, room)) return false;
 		if (target.length > 80) return this.errorReply("Error: Room description is too long (must be at most 80 characters).");
 		let normalizedTarget = ' ' + target.toLowerCase().replace('[^a-zA-Z0-9]+', ' ').trim() + ' ';
 
@@ -2337,7 +2337,7 @@ exports.commands = {
 	},
 
 	emergency: function (target, room, user) {
-		if (!this.can('lockdown')) return false;
+		if (!this.can('forcewin')) return false;
 
 		if (Config.emergency) {
 			return this.errorReply("We're already in emergency mode.");
@@ -2352,7 +2352,7 @@ exports.commands = {
 	},
 
 	endemergency: function (target, room, user) {
-		if (!this.can('lockdown')) return false;
+		if (!this.can('forcewin')) return false;
 
 		if (!Config.emergency) {
 			return this.errorReply("We're not in emergency mode.");
