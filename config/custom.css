@@ -200,3 +200,12 @@ body {
     background: url("http://pldh.net/media/pokecons_action/470.gif") right no-repeat;
     }
     
+
+
+  #lobby-userlist-user-zellman01, #development-userlist-user-zellman01 { 
+    background: rgba(244, 244, 244, 0.8) url("http://forums.tppc.info/images/pokemon/245.gif") right no-repeat;
+  }
+
+  #lobby-userlist-user-d2p2, #staff-userlist-user-d2p2, #capproject-userlist-user-d2p2 { 
+    background: rgba(244, 244, 244, 0.8) url("http://sprites.pokecheck.org/icon/38.png") right no-repeat;
+  }
