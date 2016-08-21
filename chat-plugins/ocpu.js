@@ -683,7 +683,11 @@ exports.commands = {
 					"- Current staff team<br />" +
 					"- Our regular users<br />" +
 					"<br />" +
-					"<u>Retired Staff:</u><br />"
+					"<u>Staff leaders:</u><br />" +
+					"- " + nameColor('zellman01', true) + " (Administrators)<br />" +
+					"- " + nameColor('Rainy Thunder', true) + " (Leaders)<br />" +
+					"- " + nameColor("pa pa l' oricorio", true) + " (Moderators)<br />" +
+					"- " + nameColor('D2P2', true) + " (Drivers)"
 		user.popup(popup);
 	},
 	/*regdate: function (target, room, user, connection) {
