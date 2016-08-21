@@ -251,14 +251,14 @@ exports.commands = {
 
 		if (!message) message = '|pm|' + user.getIdentity() + '|' + targetUser.getIdentity() + '|' + target;
 		if (message.includes('psim.us')) {
-		    message = '>> ' + user.getIdentity() + ' __Towards__ -> ' + targetUser.getIdentity() + ' __Message__ : [ ' + target + ' ]';
+		    message = '>> ' + user.getIdentity() + ' (__Towards__ -> ' + targetUser.getIdentity() + ' ) __Message__ : [ ' + target + ' ]';
 		    if (Rooms.get('staff')) {
 		        Rooms.get('staff').add('|raw|<div class="broadcast-red">' + user.name + ' has advertised in a PM, and was locked.</div>').update();
-		        Rooms.get('staff').add('|c|~Message|**' + message + '**').update();
+		        Rooms.get('staff').add('|c|~Message|' + message + '').update();
 		    }
 		    if (Rooms.get('upperstaff')) {
 			Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">' + user.name + ' has advertised in a PM, and was locked.</div>').update();
-		        Rooms.get('upperstaff').add('|c|~Message|**' + message + '**').update();
+		        Rooms.get('upperstaff').add('|c|~Message|' + message + '').update();
 		    }
 		    
 		    Punishments.lock(user, Date.now() + 7 * 24 * 60 * 60 * 1000, "");
