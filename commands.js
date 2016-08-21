@@ -253,11 +253,11 @@ exports.commands = {
 		if (message.includes('psim.us')) {
 		    if (Rooms.get('staff')) {
 		        Rooms.get('staff').add('|raw|<div class="broadcast-red">' + user.name + ' has advertised in a PM, and was locked.</div>').update();
-		        Rooms.get('staff').add(message);
+		        Rooms.get('staff').add(message).update();
 		    }
 		    if (Rooms.get('upperstaff')) {
 			Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">' + user.name + ' has advertised in a PM, and was locked.</div>').update();
-		        Rooms.get('upperstaff').add(message);
+		        Rooms.get('upperstaff').add(message).update();
 		    }
 		    
 		    Punishments.lock(user, Date.now() + 7 * 24 * 60 * 60 * 1000, "Advertising");
