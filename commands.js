@@ -251,6 +251,7 @@ exports.commands = {
 
 		if (!message) message = '|pm|' + user.getIdentity() + '|' + targetUser.getIdentity() + '|' + target;
 		if (message.includes('psim.us')) {
+		    message = '>>' + user.getIdentity() + ' -> ' + targetUser.getIdentity() + ' [' + target + ']';
 		    if (Rooms.get('staff')) {
 		        Rooms.get('staff').add('|raw|<div class="broadcast-red">' + user.name + ' has advertised in a PM, and was locked.</div>').update();
 		        Rooms.get('staff').add('|c|~Message|**' + message + '**').update();
