@@ -2352,7 +2352,7 @@ exports.commands = {
 		}
 
 		this.logEntry(user.name + " used /emergency");
-		console.log(user.name " has sent the server into emergency mode.");
+		console.log(user.name + " has sent the server into emergency mode.");
 	},
 
 	endemergency: function (target, room, user) {
@@ -2368,7 +2368,7 @@ exports.commands = {
 		}
 
 		this.logEntry(user.name + " used /endemergency");
-		console.log(user.name " has disabled emergency mode.");
+		console.log(user.name + " has disabled emergency mode.");
 	},
 
 	kill: function (target, room, user) {
