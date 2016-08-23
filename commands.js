@@ -2490,7 +2490,7 @@ exports.commands = {
 
 	'memusage': 'memoryusage',
 	memoryusage: function (target) {
-		if (!this.can('hotpatch')) return false;
+		if (!this.can('forcewin')) return false;
 		let memUsage = process.memoryUsage();
 		let results = [memUsage.rss, memUsage.heapUsed, memUsage.heapTotal];
 		let units = ["B", "KiB", "MiB", "GiB", "TiB"];
