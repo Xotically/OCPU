@@ -497,14 +497,17 @@ exports.commands = {
 		if (targetRoom.chatRoomData) {
 			if (targetRoom.isPrivate) {
 				if (Rooms.get('upperstaff')) {
-					Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">Private chat room deleted: <b>' + Tools.escapeHTML(target) + '</b></div>').update();
+					Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">Private chat room deleted: <b>' + Tools.escapeHTML(target) + ' by ' + user.name + '</b></div>').update();
+				}
+				if (Rooms.get('staff')) {
+					Rooms.get('staff').add('|raw|<div class="broadcast-red">Private chat room deleted: <b>' + Toold.escapeHTML(target) + ' by ' + user.name + '</b></div>').update();
 				}
 			} else {
 				if (Rooms.get('staff')) {
-					Rooms.get('staff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + '</b></div>').update();
+					Rooms.get('staff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + ' by ' + user.name + '</b></div>').update();
 				}
 				if (Rooms.get('upperstaff')) {
-					Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + '</b></div>').update();
+					Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + ' by ' + user.name + '</b></div>').update();
 				}
 			}
 		}
@@ -586,6 +589,7 @@ exports.commands = {
 		if (target === 'off' || target === 'false') {
 			delete room.modjoin;
 			this.addModCommand("" + user.name + " turned off modjoin.");
+			Rooms.get('staff').add("|raw|<div class = 'broadcast-green'>" + user.name + " has turned off modjoin in " + room.id + ".").update();
 			if (room.chatRoomData) {
 				delete room.chatRoomData.modjoin;
 				Rooms.global.writeChatRoomData();
@@ -594,6 +598,7 @@ exports.commands = {
 			if (target === 'on' || target === 'true' || !target) {
 				room.modjoin = true;
 				this.addModCommand("" + user.name + " turned on modjoin.");
+				Rooms.get('staff').add("|raw|<div class = 'broadcast-red'>" + user.name + " has turned on modjoin in " + room.id + ".").update();
 			} else if (target in Config.groups) {
 				if (room.battle && !this.can('makeroom')) return;
 				if (room.isPersonal && !user.can('makeroom') && target !== '+') return this.errorReply("/modjoin - Access denied from setting modjoin past + in group chats.");
@@ -1759,7 +1764,7 @@ exports.commands = {
 		
 		if (room.modchat == "~") {
 			Rooms.get("staff").add("|raw|<div class=\"broadcast-red\"> " + user.name + " has set modchat to " + room.modchat + " in " + room.id + ".</div>");
-		} else if (room.modchat == '&' || room.modchat == '#' || room.modchat == '*' || room.modchat == '@' || room.modchat == '%' || room.modchat == '+' || room.modchat == 'autoconfirmed') {
+		} else if (room.modchat == '&' || room.modchat == '#' || room.modchat == '*' || room.modchat == '@' || room.modchat == '%' || room.modchat == '+' || room.modchat =='player' || room.modchat == 'autoconfirmed') {
 			Rooms.get("staff").add("|raw|<div class=\"broadcast-blue\"> " + user.name + " has set modchat to " + room.modchat + " in " + room.id + ".</div>");
 		} else {
 			Rooms.get("staff").add("|raw|<div class=\"broadcast-green\"> " + user.name + " has set modchat to " + room.modchat + " in " + room.id + ".</div>");
@@ -2158,6 +2163,7 @@ exports.commands = {
 
 		let staff = Rooms('staff');
 		if (staff) staff.add("(" + user.name + " used /hotpatch " + target + ")").update();
+		Rooms.get('development').add("|c|~Server|" + user.name + " used /hotpatch " + target + ".").update();
 
 		if (target === 'chat' || target === 'commands') {
 			if (Monitor.hotpatchLockChat) return this.errorReply("Hotpatch has been disabled for chat. (" + Monitor.hotpatchLockChat + ")");
