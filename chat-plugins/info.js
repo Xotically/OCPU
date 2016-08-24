@@ -914,7 +914,7 @@ exports.commands = {
 			);
 	},
 	staffleadershelp: ["/staffleaders - Explains what 'staff leaders' means (on this server) and lists them.",
-		"!staffleaders - Shows everybody that information. Requires: + % @ * # & ~]
+		"!staffleaders - Shows everybody that information. Requires: + % @ * # & ~"],
 
 	groups: function (target, room, user) {
 		if (!this.runBroadcast()) return;
