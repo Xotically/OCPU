@@ -940,7 +940,7 @@ exports.commands = {
 			"Pok&eacute;mon Showdown is open source:<br />" +
 			"- Language: JavaScript (Node.js)<br />" +
 			"- <a href=\"https://github.com/zellman01/OCPU/commits/master\">What's new?</a><br />" +
-			"- <a href=\"https://github.com/zellman01/OCPU\">Server source code</a><br />" +
+			"- <a href=\"https://github.com/zellman01/OCPU\">Server source code</a><br />" 
 		);
 	},
 	opensourcehelp: ["/opensource - Links to PS's source code repository.",
