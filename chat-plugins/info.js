@@ -903,18 +903,17 @@ exports.commands = {
 	
 	sl: 'staffleaders',
 	staffleaders: function (target, room, user) {
-		if (!this.runBroadcast()) return;
-		this.sendReplyBox(
+		let popup = "|html|" +
 			"The staff leaders are people the owner trusts to be the 'head' of each rank that they are set to. They are also the ones responible for reporting anything wrong with some staff member within their rank. These can change, but they will rarely change. If they cannot do a certian command, they may ask someone of higher auth to do it for them.<br />" +
-			"<b>Administrator (~) Staff Leader:</b> - zellman01<br />" +
-			"<b>Leader (&) Staff Leader:</b> - Rainy Thunder<br />" +
-			"<b>Moderator (@) Staff Leader:</b> - pa pa l' oricorio<br />" +
-			"<b>Driver (%) Staff Leader:</b> - D2P2<br />" +
+			"<b>Administrator (~) Staff Leader:</b> - " + nameColor('zellman01', true) + "<br />" +
+			"<b>Leader (&) Staff Leader:</b> - " + nameColor('Rainy Thunder', true) + "<br />" +
+			"<b>Moderator (@) Staff Leader:</b> - " + nameColor("pa pa l' oricorio", true) + "<br />" +
+			"<b>Driver (%) Staff Leader:</b> - " + nameColor("D2P2", true) + "<br />" +
 			"Any names listed on here are given full authority from zellman01 to tell anyone within their respective rank to do something."
-			);
+			
+		user.popup(popup);
 	},
-	staffleadershelp: ["/staffleaders - Explains what 'staff leaders' means (on this server) and lists them.",
-		"!staffleaders - Shows everybody that information. Requires: + % @ * # & ~"],
+	staffleadershelp: ["/staffleaders - Explains what 'staff leaders' means (on this server) and lists them."],
 
 	groups: function (target, room, user) {
 		if (!this.runBroadcast()) return;
