@@ -2165,7 +2165,7 @@ exports.commands = {
 		if (Monitor.hotpatchLock) return this.errorReply("Hotpatch is currently been disabled. (" + Monitor.hotpatchLock + ")");
 
 		let staff = Rooms('staff');
-		if (staff) staff.add("(" + user.name + " used /hotpatch " + target + ")").update();
+		if (staff) staff.add("|c| |(" + user.name + " used /hotpatch " + target + ")").update();
 		Rooms.get('development').add("|c|~Server|" + user.name + " used /hotpatch " + target + ".").update();
 
 		if (target === 'chat' || target === 'commands') {

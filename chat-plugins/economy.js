@@ -13,6 +13,7 @@ let shop = [
 	['Packs', 'Buys all packs at a reduced cost.', 30],
 	['Trainer', 'Buys a trainer card which shows information through a command. (You supply, can be refused)', 40],
 	['Staff Help', 'Staff member will help set up roomintros and anything else needed in a room. Response may not be immediate.', 50],
+	['Global Voice', 'Buys global voice for yourself. Only works for one account.', 60],
 	['Icon', 'Buy a custom icon that can be applied to the rooms you want. You must take into account that the provided image should be 32 x 32', 75],
 	['Room', 'Buys a chatroom for you to own (within reason, can be refused). Once bought, must be requested in the forum.', 100],
 	['VIP', 'Buys VIP and gives you a chatroom & endless avatar/icon fixes.', 145],
