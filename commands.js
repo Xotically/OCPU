@@ -500,17 +500,17 @@ exports.commands = {
 		if (targetRoom.chatRoomData) {
 			if (targetRoom.isPrivate) {
 				if (Rooms.get('upperstaff')) {
-					Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">Private chat room deleted: <b>' + Tools.escapeHTML(target) + ' by ' + user.name + '</b></div>').update();
+					Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">Private chat room deleted: <b>' + Tools.escapeHTML(target) + '</b> by ' + user.name + '</div>').update();
 				}
 				if (Rooms.get('staff')) {
-					Rooms.get('staff').add('|raw|<div class="broadcast-red">Private chat room deleted: <b>' + Toold.escapeHTML(target) + ' by ' + user.name + '</b></div>').update();
+					Rooms.get('staff').add('|raw|<div class="broadcast-red">Private chat room deleted: <b>' + Toold.escapeHTML(target) + '</b> by ' + user.name + '</div>').update();
 				}
 			} else {
 				if (Rooms.get('staff')) {
-					Rooms.get('staff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + ' by ' + user.name + '</b></div>').update();
+					Rooms.get('staff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + '</b> by ' + user.name + ></div>').update();
 				}
 				if (Rooms.get('upperstaff')) {
-					Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + ' by ' + user.name + '</b></div>').update();
+					Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + '</b> by ' + user.name + '</div>').update();
 				}
 			}
 		}
