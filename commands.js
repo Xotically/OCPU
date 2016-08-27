@@ -507,7 +507,7 @@ exports.commands = {
 				}
 			} else {
 				if (Rooms.get('staff')) {
-					Rooms.get('staff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + '</b> by ' + user.name + ></div>').update();
+					Rooms.get('staff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + '</b> by ' + user.name + '</div>').update();
 				}
 				if (Rooms.get('upperstaff')) {
 					Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + '</b> by ' + user.name + '</div>').update();
