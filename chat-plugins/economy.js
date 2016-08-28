@@ -12,10 +12,11 @@ let shop = [
 	['Info Box', 'Buys a infobox that will be viewable with a command.', 25],
 	['Packs', 'Buys all packs at a reduced cost.', 30],
 	['Trainer', 'Buys a trainer card which shows information through a command. (You supply, can be refused)', 40],
+	['Custom Color', 'Gives you a custom color in the user-list', 45]
 	['Staff Help', 'Staff member will help set up roomintros and anything else needed in a room. Response may not be immediate.', 50],
 	['Icon', 'Buy a custom icon that can be applied to the rooms you want. You must take into account that the provided image should be 32 x 32', 75],
 	['Room', 'Buys a chatroom for you to own (within reason, can be refused). Once bought, must be requested in the forum.', 100],
-	['VIP', 'Buys VIP and gives you a chatroom & endless avatar/icon fixes + global voice.', 145],
+	['VIP', 'Buys VIP and gives you a chatroom & endless avatar/icon fixes + global voice + custom color.', 145],
 ];
 
 let shopDisplay = getShopDisplay(shop);
