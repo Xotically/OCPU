@@ -901,6 +901,17 @@ exports.commands = {
 		this.sendReplyBox("Uptime: <b>" + uptimeText + "</b>");
 	},
 	
+	devs: 'developers',
+	developers: function (target, room, user) {
+		let popup = "|html|" + "Server Developer Team: <br />" +
+		"- " + nameColor('Rainy Thunder', true) + " Lead Developer<br />" +
+		"- " + nameColor('zellman01', true) + " Developer<br />" +
+		"- " + nameColor('vaq', true) + " Developer<br />" +
+		"- " + nameColor('Mystifi', true) + " Developer<br />"
+		user.popup(popup)
+	},
+	developershelp: ["/developers - Lists the server's development team (anyone on the github that has push access)"]
+	
 	sl: 'staffleaders',
 	staffleaders: function (target, room, user) {
 		let popup = "|html|" +
