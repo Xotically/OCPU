@@ -904,11 +904,11 @@ exports.commands = {
 	sl: 'staffleaders',
 	staffleaders: function (target, room, user) {
 		let popup = "|html|" +
-			"The staff leaders are people the owner trusts to be the 'head' of each rank that they are set to. They are also the ones responible for reporting anything wrong with some staff member within their rank. These can change, but they will rarely change. If they cannot do a certian command, they may ask someone of higher auth to do it for them.<br />" +
+			"The staff leaders are people the owner trusts to be the 'head' of each rank that they are set to. They are also the ones responible for reporting anything wrong with some staff member within their rank. These can change, but they will rarely change. If they cannot do a certian command, they may ask someone of higher auth to do it for them.<br /><br />" +
 			"<b>Administrator (~) Staff Leader:</b> - " + nameColor('zellman01', true) + "<br />" +
 			"<b>Leader (&) Staff Leader:</b> - " + nameColor('Rainy Thunder', true) + "<br />" +
 			"<b>Moderator (@) Staff Leader:</b> - " + nameColor("pa pa l' oricorio", true) + "<br />" +
-			"<b>Driver (%) Staff Leader:</b> - " + nameColor("D2P2", true) + "<br />" +
+			"<b>Driver (%) Staff Leader:</b> - " + nameColor("D2P2", true) + "<br /><br />" +
 			"Any names listed on here are given full authority from zellman01 to tell anyone within their respective rank to do something."
 			
 		user.popup(popup);
@@ -1682,8 +1682,8 @@ exports.commands = {
 		target = this.canHTML(target);
 		if (!target) return;
 
+		if (!this.can('declare', null, room)) return;
 		if (!this.runBroadcast('!htmlbox')) return;
-		if (this.broadcasting && !this.can('declare', null, room)) return;
 
 		this.sendReplyBox(target);
 	},
