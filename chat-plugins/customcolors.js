@@ -76,7 +76,7 @@ exports.commands = {
         customColors[toId(target[0])] = target[1];
         updateColor();
     },
-    customcolorhelp: ["<b><u>Commands Include:</b></u>",
+    customcolorhelp: ["<b><u>Commands Include:</u></b>",
                 "/customcolor [user], [hex] - Gives the user a custom color of [hex]. Requires: &,~",
                 "/customcolor [user], delete - Deletes a user's custom color. Requires: &,~"],
 
