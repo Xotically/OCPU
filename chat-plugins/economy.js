@@ -11,6 +11,7 @@ let shop = [
 	['League Room', 'Buys a room at a reduced rate for use with a league.  A roster must be supplied with at least 10 members for this room.', 25],
 	['Info Box', 'Buys a infobox that will be viewable with a command.', 25],
 	['Packs', 'Buys all packs at a reduced cost.', 30],
+	['Custom PM Box', 'Buys you a custom PM box. You must code it and give the code to a dev.', 35],
 	['Trainer', 'Buys a trainer card which shows information through a command. (You supply, can be refused)', 40],
 	['Custom Color', 'Gives you a custom color in the user-list', 45],
 	['Staff Help', 'Staff member will help set up roomintros and anything else needed in a room. Response may not be immediate.', 50],
