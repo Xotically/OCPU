@@ -933,7 +933,7 @@ exports.commands = {
 		"- " + nameColor('Mystifi', true) + " Developer<br />"
 		user.popup(popup)
 	},
-	developershelp: ["/developers - Lists the server's development team (anyone on the github that has push access)"]
+	developershelp: ["/developers - Lists the server's development team (anyone on the github that has push access)"],
 	
 	sl: 'staffleaders',
 	staffleaders: function (target, room, user) {
