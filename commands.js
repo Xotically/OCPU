@@ -2358,7 +2358,7 @@ exports.commands = {
 		Config.emergency = true;
 		Config.pmmodchat = '+';
 		for (let id in Rooms.rooms) {
-			if (id !== 'global') Rooms.rooms[id].addRaw("<div class=\"broadcast-red\">The server has entered emergency mode. Some features might be disabled or limited.</div>");
+			if (id !== 'global') Rooms.rooms[id].addRaw("<div class=\"broadcast-red\">The server has entered emergency mode by order of " + user.name + ". Some features might be disabled or limited.</div>");
 		}
 
 		this.logEntry(user.name + " used /emergency");
@@ -2374,7 +2374,7 @@ exports.commands = {
 		Config.emergency = false;
 		Config.pmmodchat = false;
 		for (let id in Rooms.rooms) {
-			if (id !== 'global') Rooms.rooms[id].addRaw("<div class=\"broadcast-green\"><b>The server is no longer in emergency mode.</b></div>");
+			if (id !== 'global') Rooms.rooms[id].addRaw("<div class=\"broadcast-green\"><b>The server is no longer in emergency mode by order of " + user.name + ".</b></div>");
 		}
 
 		this.logEntry(user.name + " used /endemergency");
