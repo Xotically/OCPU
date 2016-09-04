@@ -16,7 +16,7 @@ const path = require('path');
 
 exports.commands = {
 
-	ip: 'whois',
+        ip: 'whois',
 	rooms: 'whois',
 	alt: 'whois',
 	alts: 'whois',
@@ -50,7 +50,7 @@ exports.commands = {
 		let publicrooms = "";
 		let hiddenrooms = "";
 		let privaterooms = "";
-		targetUser.inRooms/*.forEach*/(roomid => {
+		targetUser.inRooms.forEach(roomid => {
 			if (roomid === 'global') return;
 			let targetRoom = Rooms.get(roomid);
 
@@ -159,7 +159,6 @@ exports.commands = {
 	},
 	whoishelp: ["/whois - Get details on yourself: alts, group, IP address, and rooms.",
 		"/whois [username] - Get details on a username: alts (Requires: % @ * & ~), group, IP address (Requires: @ * & ~), and rooms."],
-
 
 	host: function (target, room, user, connection, cmd) {
 		if (!target) return this.parse('/help host');
