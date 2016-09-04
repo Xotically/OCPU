@@ -280,6 +280,7 @@ exports.grouplist = [
 		declare: true,
 		modchatall: true,
 		roomonly: true,
+		roomdesc: true,
 		tournamentsmanagement: true,
 		gamemanagement: true,
 	},
