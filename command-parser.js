@@ -38,7 +38,6 @@ const BROADCAST_TOKEN = '!';
 
 const fs = require('fs');
 const path = require('path');
-const parseEmoticons = require('./chat-plugins/emoticons').parseEmoticons;
 
 exports.multiLinePattern = {
 	elements: [],
@@ -61,13 +60,13 @@ exports.multiLinePattern = {
  * Load command files
  *********************************************************/
 
-let baseCommands = exports.baseCommands = require('./commands.js').commands;
+let baseCommands = exports.baseCommands = require('./commands').commands;
 let commands = exports.commands = Object.assign({}, baseCommands);
 
 // Install plug-in commands
 
 // info always goes first so other plugins can shadow it
-Object.assign(commands, require('./chat-plugins/info.js').commands);
+Object.assign(commands, require('./chat-plugins/info').commands);
 
 for (let file of fs.readdirSync(path.resolve(__dirname, 'chat-plugins'))) {
 	if (file.substr(-3) !== '.js' || file === 'info.js') continue;
@@ -211,11 +210,6 @@ class CommandContext {
 	}
 	canBroadcast(suppressMessage) {
 		if (!this.broadcasting && this.cmdToken === BROADCAST_TOKEN) {
-			if (this.user.broadcasting) {
-				this.errorReply("You can't broadcast another command too soon.");
-				return false;
-			}
-
 			let message = this.canTalk(suppressMessage || this.message);
 			if (!message) return false;
 			if (!this.user.can('broadcast', null, this.room)) {
@@ -235,7 +229,6 @@ class CommandContext {
 
 			this.message = message;
 			this.broadcastMessage = broadcastMessage;
-			this.user.broadcasting = this.cmd;
 		}
 		return true;
 	}
@@ -255,7 +248,6 @@ class CommandContext {
 		this.room.lastBroadcastTime = Date.now();
 
 		this.broadcasting = true;
-		this.user.broadcasting = false;
 
 		return true;
 	}
@@ -284,7 +276,7 @@ class CommandContext {
 		try {
 			result = commandHandler.call(this, this.target, this.room, this.user, this.connection, this.cmd, this.message);
 		} catch (err) {
-			if (require('./crashlogger.js')(err, 'A chat command', {
+			if (require('./crashlogger')(err, 'A chat command', {
 				user: this.user.name,
 				room: this.room.id,
 				message: this.message,
@@ -678,8 +670,6 @@ let parse = exports.parse = function (message, room, user, connection, levelsDee
 	}
 
 	message = context.canTalk(message);
-
-	if (parseEmoticons(message, room, user)) return;
 
 	return message || false;
 };
