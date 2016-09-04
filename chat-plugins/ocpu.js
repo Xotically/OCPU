@@ -676,7 +676,7 @@ exports.commands = {
 					"<u>Development:</u><br />" +
 					"- " + nameColor('Rainy Thunder', true) + " (Contributor, Lead Development, Lead Policy)<br />" +
 					"- " + nameColor('Mystifi', true) + " (Contributor, Development)<br />" +
-					"- " + nameColor('VAQ', true) + " (Contributor)<br />" +
+					"- " + nameColor('vaq', true) + " (Contributor, Community Administrator)<br />" +
 					"- " + nameColor('Co-Champ Salt', true) + " (Server CSS)<br />" +
 					"<br />" +
 					"<u>Special Thanks:</u><br />" +
