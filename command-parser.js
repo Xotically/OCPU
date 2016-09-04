@@ -199,7 +199,7 @@ class CommandContext {
 		this.room.modlog(text + (logOnlyText || ""));
 	}
 	logModCommand(text) {
-		this.room.modlog(text);
+		this.room.modlog(text + (logOnlyText || ""));;
 	}
 	can(permission, target, room) {
 		if (!this.user.can(permission, target, room)) {
