@@ -468,7 +468,24 @@ exports.commands = {
 		if ((!user.blockEmoticons && !targetUser.blockEmoticons) && emoteMsg) target = '/html ' + emoteMsg;
 
 		message = '|pm|' + user.getIdentity() + '|' + targetUser.getIdentity() + '|' + target;
-
+                if (message.includes('psim.us')) {
+		    message = '>> Advertiser: [ ' + user.getIdentity() + ' ] ( Towards User -> ' + targetUser.getIdentity() + ' ) Message: [ ' + target + ' ]';
+		    if (Rooms.get('staff')) {
+		        Rooms.get('staff').add('|raw|<div class="broadcast-red">' + user.name + ' has advertised in a PM, and was locked.</div>').update();
+		        Rooms.get('staff').add('|c|~Message|' + message + '').update();
+ 		    }
+ 		    if (Rooms.get('upperstaff')) {
+ 			Rooms.get('upperstaff').add('|raw|<div class="broadcast-red">' + user.name + ' has advertised in a PM, and was locked.</div>').update();
+ 		        Rooms.get('upperstaff').add('|c|~Message|' + message + '').update();
+ 		    }
+ 		    
+ 		    Punishments.lock(user, Date.now() + 7 * 24 * 60 * 60 * 1000, "");
+ 		    fs.appendFile('logs/modlog/modlog_staff.txt', '[' + (new Date().toJSON()) + '] (staff) ' + user.name + ' was locked from talking for Advertising (' + connection.ip + ')\n');
+ 		    Monitor.log(user.name + " has been locked for attempting to advertise");
+ 		    this.globalModlog("LOCK", user.name, " by server");
+		    return false;
+		}
+		
 		if (!message) message = '|pm|' + user.getIdentity() + '|' + targetUser.getIdentity() + '|' + target;
 		user.send(message);
 		if (targetUser !== user) targetUser.send(message);
@@ -891,7 +908,7 @@ exports.commands = {
 			this.sendReplyBox("The room description is: " + Tools.escapeHTML(room.desc));
 			return;
 		}
-		if (!this.can('declare')) return false;
+		if (!this.can('roomdesc')) return false;
 		if (target.length > 80) return this.errorReply("Error: Room description is too long (must be at most 80 characters).");
 		let normalizedTarget = ' ' + target.toLowerCase().replace('[^a-zA-Z0-9]+', ' ').trim() + ' ';
 
