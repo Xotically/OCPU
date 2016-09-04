@@ -50,7 +50,7 @@ exports.commands = {
 		let publicrooms = "";
 		let hiddenrooms = "";
 		let privaterooms = "";
-		targetUser.inRooms.forEach(roomid => {
+		targetUser.inRooms./*forEach*/(roomid => {
 			if (roomid === 'global') return;
 			let targetRoom = Rooms.get(roomid);
 
