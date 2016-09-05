@@ -824,7 +824,7 @@ class Tournament {
 		let tourSize = this.generator.users.size;
 
 		if (this.room.isOfficial && tourSize >= sizeRequiredToEarn) {
-			let firstMoney = Math.round(tourSize / 4);
+			let firstMoney = Math.round(tourSize / 2);
 			let secondMoney = Math.round(firstMoney / 2);
 
 			Db('money').set(wid, Db('money').get(wid, 0) + firstMoney);
