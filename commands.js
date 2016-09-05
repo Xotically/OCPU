@@ -605,15 +605,18 @@ exports.commands = {
 			targetRoom.chatRoomData.isPrivate = true;
 			Rooms.global.writeChatRoomData();
 			if (Rooms.get('upperstaff')) {
-				Rooms.get('upperstaff').add('|raw|<div class="broadcast-green">Private chat room created: <b>' + Tools.escapeHTML(target) + '</b></div>').update();
+				Rooms.get('upperstaff').add('|raw|<div class="broadcast-green">Private chat room created by ' + user.name + ': <b>' + Tools.escapeHTML(target) + '</b></div>').update();
+			}
+			if(Rooms.get('staff')) {
+				Rooms.get('staff').add('|raw|<div class="broadcast-green">Private chat room created by ' + user.name + ': <b>' + Tools.escapeHTML(target) + '</b></div>').update();
 			}
 			this.sendReply("The private chat room '" + target + "' was created.");
 		} else {
 			if (Rooms.get('staff')) {
-				Rooms.get('staff').add('|raw|<div class="broadcast-green">Public chat room created: <b>' + Tools.escapeHTML(target) + '</b></div>').update();
+				Rooms.get('staff').add('|raw|<div class="broadcast-green">Public chat room created by ' + user.name + ': <b>' + Tools.escapeHTML(target) + '</b></div>').update();
 			}
 			if (Rooms.get('upperstaff')) {
-				Rooms.get('upperstaff').add('|raw|<div class="broadcast-green">Public chat room created: <b>' + Tools.escapeHTML(target) + '</b></div>').update();
+				Rooms.get('upperstaff').add('|raw|<div class="broadcast-green">Public chat room created by ' + user.name + ': <b>' + Tools.escapeHTML(target) + '</b></div>').update();
 			}
 			this.sendReply("The chat room '" + target + "' was created.");
 		}
@@ -743,9 +746,12 @@ exports.commands = {
 				if (Rooms.get('upperstaff')) {
 					Rooms.get('upperstaff').add(`|raw|<div class="broadcast-red">Private chat room deleted by ${user.userid}: <b>${Tools.escapeHTML(target)}</b></div>`).update();
 				}
+				if (Rooms.get('staff')) {
+					Rooms.get('staff').add('|raw|<div class="broadcast-red">Private chat room deleted by ' + user.name + ': <b>' + Tools.escapeHTML(target) + '</b></div>').update();
+				}
 			} else {
 				if (Rooms.get('staff')) {
-					Rooms.get('staff').add('|raw|<div class="broadcast-red">Public chat room deleted: <b>' + Tools.escapeHTML(target) + '</b></div>').update();
+					Rooms.get('staff').add('|raw|<div class="broadcast-red">Public chat room deleted by ' + user.name + ': <b>' + Tools.escapeHTML(target) + '</b></div>').update();
 				}
 				if (Rooms.get('upperstaff')) {
 					Rooms.get('upperstaff').add(`|raw|<div class="broadcast-red">Public chat room deleted by ${user.userid}: <b>${Tools.escapeHTML(target)}</b></div>`).update();
@@ -2033,6 +2039,14 @@ exports.commands = {
 		if (room.battle && !room.modchat && !user.can('modchat')) room.requestModchat(null);
 		this.privateModCommand("(" + user.name + " set modchat to " + room.modchat + ")");
 
+		if (room.modchat == false) {
+			Rooms.get('staff').add('|raw|<div class="broadcast-green">' + user.name + ' has disabled modchat in ' + room.id + '.</div>').update();
+		} else if (room.modchat == 'autoconfirmed' || room.modchat == '+' || room.modchat == 'player' || room.modchat == '%' || room.modchat == '@' || room.modchat == '*' || room.modchat == '&' || room.modchat == '#') {
+			Rooms.get('staff').add('|raw|<div class="broadcast-blue>' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>').update();
+		} else if (room.modchat == '~') {
+			Rooms.get('staff').add('|raw|<div class="broadcast-red">' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>').update();
+		}
+		
 		if (room.chatRoomData) {
 			room.chatRoomData.modchat = room.modchat;
 			Rooms.global.writeChatRoomData();
