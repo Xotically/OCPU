@@ -232,7 +232,7 @@ exports.commands = {
 	},
 	hide: 'hideauth',
 	hideauth: function (target, room, user) {
-		if (!user.can('roomowner')) return this.sendReply("/hideauth - Access Denied.");
+		if (!this.can('lock')) return false;
 		let tar = ' ';
 		if (target) {
 			target = target.trim();
