@@ -2041,7 +2041,7 @@ exports.commands = {
 
 		if (room.modchat == false && (!room.type === 'battle')) {
 			Rooms.get('staff').add('|raw|<div class="broadcast-green">' + user.name + ' has disabled modchat in ' + room.id + '.</div>').update();
-		} else if (room.modchat == 'autoconfirmed' || room.modchat == '+' || room.modchat == 'player' || room.modchat == '%' || room.modchat == '@' || room.modchat == '*' || room.modchat == '&' || room.modchat == '#') {
+		} else if (room.modchat == 'autoconfirmed' && (!room.type === 'battle') || room.modchat == '+' && (!room.type === 'battle') || room.modchat == '★' && (!room.type === 'battle') || room.modchat == '%' && (!room.type === 'battle') || room.modchat == '@' && (!room.type === 'battle') || room.modchat == '*' && (!room.type === 'battle') || room.modchat == '&' && (!room.type === 'battle') || room.modchat == '#' && (!room.type === 'battle')) {
 			Rooms.get('staff').add('|raw|<div class="broadcast-blue">' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>').update();
 		} else if (room.modchat == '~' && (!room.type === 'battle')) {
 			Rooms.get('staff').add('|raw|<div class="broadcast-red">' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>').update();
