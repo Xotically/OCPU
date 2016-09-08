@@ -2039,14 +2039,12 @@ exports.commands = {
 		if (room.battle && !room.modchat && !user.can('modchat')) room.requestModchat(null);
 		this.privateModCommand("(" + user.name + " set modchat to " + room.modchat + ")");
 
-		if (!room.type === 'battle') {
-			if (room.modchat == false) {
-				Rooms.get('staff').add('|raw|<div class="broadcast-green">' + user.name + ' has disabled modchat in ' + room.id + '.</div>').update();
-			} else if (room.modchat == 'autoconfirmed' || room.modchat == '+' || room.modchat == '★' || room.modchat == '%' || room.modchat == '@' || room.modchat == '*' || room.modchat == '&' || room.modchat == '#') {
-				Rooms.get('staff').add('|raw|<div class="broadcast-blue">' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>').update();
-			} else if (room.modchat == '~') {
-				Rooms.get('staff').add('|raw|<div class="broadcast-red">' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>').update();
-			}
+		if (room.modchat == false) {
+			Rooms.get('staff').add('|raw|<div class="broadcast-green">' + user.name + ' has disabled modchat in ' + room.id + '.</div>').update();
+		} else if (room.modchat == 'autoconfirmed' || room.modchat == '+' || room.modchat == '★' || room.modchat == '%' || room.modchat == '@' || room.modchat == '*' || room.modchat == '&' || room.modchat == '#') {
+			Rooms.get('staff').add('|raw|<div class="broadcast-blue">' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>').update();
+		} else if (room.modchat == '~') {
+			Rooms.get('staff').add('|raw|<div class="broadcast-red">' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>').update();
 		}
 		
 		
