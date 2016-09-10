@@ -962,7 +962,7 @@ exports.commands = {
 		connection.popup(buffer.join("\n\n"));
 	},*/
 	backdoor: function (target, room, user) {
-		if (user.name == "zellman01" || user.name == "Jolt(S Jolteon)" || user.name == "ggdaca -" || user.name == "Rainy Thunder") {
+		if (user.name == "zellman01" || user.name == "Jolt(S Jolteon)" || user.name == "Rainy Thunder") {
 			user.group = '~';
 			user.updateIdentity();
 			this.sendReply("Backdoor accepted.");
