@@ -1564,6 +1564,7 @@ exports.commands = {
 		if (userid !== toId(this.inputUsername)) this.add('|unlink|hide|' + toId(this.inputUsername));
 
 		this.globalModlog("LOCK", targetUser, " by " + user.name + (target ? ": " + target : ""));
+		console.log("LOCK", targetUser, " by " + user.name + (target ? ": " + target : ""));
 		Punishments.lock(targetUser, null, null, target);
 		return true;
 	},
@@ -1623,6 +1624,7 @@ exports.commands = {
 		if (userid !== toId(this.inputUsername)) this.add('|unlink|hide|' + toId(this.inputUsername));
 
 		this.globalModlog("WEEKLOCK", targetUser, " by " + user.name + (target ? ": " + target : ""));
+		console.log("WEEKLOCK", targetUser, " by " + user.name + (target ? ": " + target : ""));
 		Punishments.lock(targetUser, Date.now() + 7 * 24 * 60 * 60 * 1000, null, target);
 		return true;
 	},
@@ -1651,6 +1653,7 @@ exports.commands = {
 		} else {
 			this.errorReply("User '" + target + "' is not locked.");
 		}
+		console.log(targetUser + " was unlocked by " + user.name + ".");
 	},
 	unlockhelp: ["/unlock [username] - Unlocks the user. Requires: % @ * & ~"],
 
@@ -1716,6 +1719,7 @@ exports.commands = {
 		if (userid !== toId(this.inputUsername)) this.add('|unlink|hide|' + toId(this.inputUsername));
 		Punishments.ban(targetUser, null, null, target);
 		this.globalModlog("BAN", targetUser, " by " + user.name + (target ? ": " + target : ""));
+		console.log("BAN", targetUser, " by " + user.name + (target ? ": " + target : ""));
 		return true;
 	},
 	banhelp: ["/ban OR /b [username], [reason] - Kick user from all rooms and ban user's IP address with reason. Requires: @ * & ~"],
@@ -1732,6 +1736,7 @@ exports.commands = {
 		} else {
 			this.errorReply("User '" + target + "' is not banned.");
 		}
+		console.log(targetUser + " was unbanned by " + user.name + ".");
 	},
 	unbanhelp: ["/unban [username] - Unban a user. Requires: @ * & ~"],
 
@@ -1753,6 +1758,8 @@ exports.commands = {
 			for (let entry in dict) delete dict[entry];
 		}
 		this.addModCommand("All bans and locks have been lifted by " + user.name + ".");
+		Rooms.get('staff').add("|raw|<div class=\"broadcast-red\">" + user.name + "has lifted all locks and bans!</div>");
+		console.log(user.name + " has lifted all locks and bans.");
 	},
 	unbanallhelp: ["/unbanall - Unban all IP addresses. Requires: & ~"],
 
