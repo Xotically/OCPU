@@ -1193,7 +1193,12 @@ CommandParser.commands.tournament = function (paramString, room, user) {
 				if (tourRoom && tourRoom !== room) tourRoom.addRaw('<div class="infobox"><a href="/' + room.id + '" class="ilink"><strong>' + Tools.escapeHTML(Tools.getFormat(tour.format).name) + '</strong> tournament created in <strong>' + Tools.escapeHTML(room.title) + '</strong>.</a></div>').update();
 			}
 		}
-		Rooms.get("lobby").addRaw('<div class="infobox"><a href="/' + room.id + '" class="ilink"><strong>' + Tools.escapeHTML(Tools.getFormat(tour.format).name) + '</strong> tournament created in <strong>' + Tools.escapeHTML(room.title) + '</strong>.</a></div>').update();
+		if (!room.id == 'staff') {
+			Rooms.get("staff").addRaw('<div class="infobox"><a href="/' + room.id + '" class=ilink"><strong>' + Tools.escapeHTML(Tools.getFormat(tour.format).name) + '</strong> tournament created in <strong>' + Tools.escapeHTML(room.title) + '</strong>.</a></div>').update();
+		}
+		if (!room.id == 'lobby' || !room.id == 'staff') {
+			Rooms.get("lobby").addRaw('<div class="infobox"><a href="/' + room.id + '" class="ilink"><strong>' + Tools.escapeHTML(Tools.getFormat(tour.format).name) + '</strong> tournament created in <strong>' + Tools.escapeHTML(room.title) + '</strong>.</a></div>').update();
+		}
 	} else {
 		let tournament = getTournament(room.id);
 		if (!tournament) {
