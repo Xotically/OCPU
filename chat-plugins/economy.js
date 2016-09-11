@@ -73,14 +73,14 @@ function logMoney(message) {
  */
 function getShopDisplay(shop) {
 	let display = "<table border='1' cellspacing='0' cellpadding='5' width='100%'>" +
-					"<tbody><tr><th>Command</th><th>Description</th><th>Cost</th></tr>";
+		"<tbody><tr><th>Command</th><th>Description</th><th>Cost</th></tr>";
 	let start = 0;
 	while (start < shop.length) {
 		display += "<tr>" +
-						"<td align='center'><button name='send' value='/buy " + shop[start][0] + "'><b>" + shop[start][0] + "</b></button>" + "</td>" +
-						"<td align='center'>" + shop[start][1] + "</td>" +
-						"<td align='center'>" + shop[start][2] + "</td>" +
-					"</tr>";
+			"<td align='center'><button name='send' value='/buy " + shop[start][0] + "'><b>" + shop[start][0] + "</b></button>" + "</td>" +
+			"<td align='center'>" + shop[start][1] + "</td>" +
+			"<td align='center'>" + shop[start][2] + "</td>" +
+			"</tr>";
 		start++;
 	}
 	display += "</tbody></table><center>To buy an item from the shop, use /buy <em>command</em>.</center>";
@@ -311,13 +311,9 @@ exports.commands = {
 	richestuser: function (target, room, user) {
 		if (!this.runBroadcast()) return;
 		let display = '<center><u><b>Richest Users</b></u></center><br><table border="1" cellspacing="0" cellpadding="5" width="100%"><tbody><tr><th>Rank</th><th>Username</th><th>Money</th></tr>';
-		let keys = Object.keys(Db('money').object()).map(name => {
-			return {name: name, money: Db('money').get(name)};
-		});
+		let keys = Object.keys(Db('money').object()).map(name => {name: name, money: Db('money').get(name)});
 		if (!keys.length) return this.sendReplyBox("Money ladder is empty.");
-		keys.sort((a, b) => {
-			return b.money - a.money;
-		});
+		keys.sort((a, b) => b.money - a.money);
 		keys.slice(0, 10).forEach((user, index) => {
 			display += "<tr><td>" + (index + 1) + "</td><td>" + user.name + "</td><td>" + user.money + "</td></tr>";
 		});
@@ -390,9 +386,7 @@ exports.commands = {
 	economystats: function (target, room, user) {
 		if (!this.runBroadcast()) return;
 		const users = Object.keys(Db('money').object());
-		const total = users.reduce((acc, cur) => {
-			return acc + Db('money').get(cur);
-		}, 0);
+		const total = users.reduce((acc, cur) => acc + Db('money').get(cur), 0);
 		let average = Math.floor(total / users.length) || '0';
 		let output = "There " + (total > 1 ? "are " : "is ") + total + currencyName(total) + " circulating in the economy. ";
 		output += "The average user has " + average + currencyName(average) + ".";
