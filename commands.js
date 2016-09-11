@@ -1653,7 +1653,6 @@ exports.commands = {
 		} else {
 			this.errorReply("User '" + target + "' is not locked.");
 		}
-		console.log(targetUser + " was unlocked by " + user.name + ".");
 	},
 	unlockhelp: ["/unlock [username] - Unlocks the user. Requires: % @ * & ~"],
 
@@ -1736,7 +1735,6 @@ exports.commands = {
 		} else {
 			this.errorReply("User '" + target + "' is not banned.");
 		}
-		console.log(targetUser + " was unbanned by " + user.name + ".");
 	},
 	unbanhelp: ["/unban [username] - Unban a user. Requires: @ * & ~"],
 
