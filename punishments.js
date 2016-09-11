@@ -25,14 +25,17 @@ const BAN_DURATION = 7 * 24 * 60 * 60 * 1000; // 1 week
 
 // a punishment is an array: [punishType, userid, expireTime, reason]
 
-// ips is an ip:punishment Map
+/**
+ * ips is an ip:punishment Map
+ * @type Map<string, Array>
+ */
 Punishments.ips = new Map();
 
-// userids is a userid:punishment Map
+/**
+ * userids is a userid:punishment Map
+ * @type Map<string, Array>
+ */
 Punishments.userids = new Map();
-
-// hosts is a hosts:punishment Map
-Punishments.hosts = new Map();
 
 /*********************************************************
  * Persistence
@@ -123,19 +126,31 @@ Punishments.savePunishments = function () {
 	fs.writeFile(PUNISHMENT_FILE, buf, () => {});
 };
 
+/**
+ * @param {Array} entry
+ * @param {string} id
+ */
 Punishments.appendPunishment = function (entry, id) {
 	if (id.charAt(0) === '#') return;
 	let buf = Punishments.renderEntry(entry, id);
 	fs.appendFile(PUNISHMENT_FILE, buf, () => {});
 };
 
+/**
+ * @param {Array} entry
+ * @param {string} id
+ * @return {string}
+ */
 Punishments.renderEntry = function (entry, id) {
 	let row = [entry.punishType, id, entry.keys.join(',')].concat(entry.rest);
 	return row.join('\t') + '\r\n';
 };
 
+/**
+ * @return {Promise}
+ */
 Punishments.loadBanlist = function () {
-	return new Promise(function (resolve, reject) {
+	return new Promise((resolve, reject) => {
 		fs.readFile(path.resolve(__dirname, 'config/ipbans.txt'), (err, data) => {
 			if (err) return reject(err);
 			data = ('' + data).split("\n");
@@ -149,7 +164,7 @@ Punishments.loadBanlist = function () {
 					Punishments.ips.set(data[i], ['BAN', '#ipban', Infinity]);
 				}
 			}
-			Punishments.checkRangeBanned = Cidr.checker(rangebans);
+			Punishments.checkRangeBanned = Dnsbl.checker(rangebans);
 			resolve();
 		});
 	});
@@ -167,6 +182,11 @@ setImmediate(() => {
  * Adding and removing
  *********************************************************/
 
+/**
+ * @param {User} user
+ * @param {Array} punishment
+ * @param {?Set<string>} noRecurse
+ */
 Punishments.punish = function (user, punishment, noRecurse) {
 	let keys = noRecurse;
 	if (!keys) {
@@ -206,7 +226,11 @@ Punishments.punish = function (user, punishment, noRecurse) {
 		}, punishment[1]);
 	}
 };
-Punishments.unpunish = function (id, punishType, noRecurse) {
+/**
+ * @param {string} id
+ * @param {string} punishType
+ */
+Punishments.unpunish = function (id, punishType) {
 	id = toId(id);
 	let punishment = Punishments.useridSearch(id);
 	if (punishment) {
@@ -234,6 +258,12 @@ Punishments.unpunish = function (id, punishType, noRecurse) {
 	return success;
 };
 
+/**
+ * @param {User} user
+ * @param {number} expireTime
+ * @param {string} id
+ * @param {?string} reason
+ */
 Punishments.ban = function (user, expireTime, id, reason) {
 	if (!id) id = user.getLastId();
 
@@ -247,10 +277,19 @@ Punishments.ban = function (user, expireTime, id, reason) {
 		curUser.disconnectAll();
 	}
 };
+/**
+ * @param {string} name
+ */
 Punishments.unban = function (name) {
 	let success = Punishments.unpunish(name, 'BAN');
 	return success;
 };
+/**
+ * @param {User} user
+ * @param {number} expireTime
+ * @param {string} id
+ * @param {?string} reason
+ */
 Punishments.lock = function (user, expireTime, id, reason) {
 	if (!id) id = user.getLastId();
 
@@ -264,19 +303,24 @@ Punishments.lock = function (user, expireTime, id, reason) {
 		curUser.updateIdentity();
 	}
 };
+/**
+ * @param {string} name
+ */
 Punishments.unlock = function (name) {
 	let user = Users(name);
 	let id = toId(name);
 	let success = [];
-	if (user && user.locked) {
+	if (user && user.locked && !user.namelocked) {
 		id = user.locked;
 		user.locked = false;
+		user.namelocked = false;
 		user.updateIdentity();
 		success.push(user.getLastName());
 		if (id.charAt(0) !== '#') {
 			Users.users.forEach(curUser => {
 				if (curUser.locked === id) {
 					curUser.locked = false;
+					curUser.namelocked = false;
 					curUser.updateIdentity();
 					success.push(curUser.getLastName());
 				}
@@ -292,6 +336,12 @@ Punishments.unlock = function (name) {
 	}
 	return success;
 };
+/**
+ * @param {User} user
+ * @param {number} expireTime
+ * @param {string} id
+ * @param {?string} reason
+ */
 Punishments.namelock = function (user, expireTime, id, reason) {
 	if (!id) id = user.getLastId();
 
@@ -307,6 +357,9 @@ Punishments.namelock = function (user, expireTime, id, reason) {
 		curUser.updateIdentity();
 	}
 };
+/**
+ * @param {string} name
+ */
 Punishments.unnamelock = function (name) {
 	let user = Users(name);
 	let id = toId(name);
@@ -338,19 +391,30 @@ Punishments.unnamelock = function (name) {
 	return success;
 };
 
-Punishments.lockRange = function (range, isIp) {
-	let punishment = ['LOCK', '#rangelock', RANGELOCK_DURATION];
-	if (isIp) {
-		Punishments.ips.set(range, punishment);
-	} else {
-		Punishments.hosts.set(range, punishment);
-	}
+/**
+ * @param {string} range
+ * @param {string} reason
+ */
+Punishments.lockRange = function (range, reason) {
+	let punishment = ['LOCK', '#rangelock', Date.now() + RANGELOCK_DURATION, reason];
+	Punishments.ips.set(range, punishment);
+};
+/**
+ * @param {string} range
+ * @param {string} reason
+ */
+Punishments.banRange = function (range, reason) {
+	let punishment = ['BAN', '#rangelock', Date.now() + RANGELOCK_DURATION, reason];
+	Punishments.ips.set(range, punishment);
 };
 
 /*********************************************************
  * Checking
  *********************************************************/
 
+/**
+ * @param {string} name
+ */
 Punishments.getPunishType = function (name) {
 	let punishment = Punishments.useridSearch(toId(name));
 	if (punishment) return punishment[0];
@@ -366,6 +430,9 @@ Punishments.getPunishType = function (name) {
  *
  * For instance, if IP is '1.2.3.4', will return the value corresponding
  * to any of the keys in table match '1.2.3.4', '1.2.3.*', '1.2.*', or '1.*'
+ *
+ * @param {string} ip
+ * @return {?Array}
  */
 Punishments.ipSearch = function (ip) {
 	let punishment = Punishments.ips.get(ip);
@@ -386,6 +453,10 @@ Punishments.ipSearch = function (ip) {
 	return false;
 };
 
+/**
+ * @param {string} userid
+ * @return {?Array}
+ */
 Punishments.useridSearch = function (userid) {
 	let punishment = Punishments.userids.get(userid);
 	if (punishment) {
@@ -395,6 +466,10 @@ Punishments.useridSearch = function (userid) {
 	return false;
 };
 
+/**
+ * @param {string} userid
+ * @return {?Array}
+ */
 Punishments.shortenHost = function (host) {
 	if (host.slice(-7) === '-nohost') return host;
 	let dotLoc = host.lastIndexOf('.');
@@ -407,6 +482,10 @@ Punishments.shortenHost = function (host) {
 // Defined in Punishments.loadBanlist
 Punishments.checkRangeBanned = function () {};
 
+/**
+ * @param {User} user
+ * @param {boolean} registered
+ */
 Punishments.checkName = function (user, registered) {
 	let userid = user.userid;
 	let punishment = Punishments.useridSearch(userid);
@@ -414,53 +493,50 @@ Punishments.checkName = function (user, registered) {
 		punishment = Punishments.useridSearch(user.namelocked);
 		if (!punishment) punishment = ['NAMELOCK', user.namelocked, 0];
 	}
+	if (!punishment && user.locked) {
+		punishment = Punishments.useridSearch(user.locked);
+		if (!punishment) punishment = ['LOCK', user.locked, 0];
+	}
 	if (!punishment) return;
 
 	let id = punishment[0];
 	let punishUserid = punishment[1];
+	let reason = ``;
+	if (punishment[3]) reason = `||||Reason: ${punishment[3]}`;
+	let appeal = ``;
+	if (Config.appealurl) appeal = `||||Or you can appeal at: ${Config.appealurl}`;
+	let bannedUnder = ``;
+	if (punishUserid !== userid) bannedUnder = ` because you have the same IP as banned user: ${punishUserid}`;
 
 	if (registered && id === 'BAN') {
-		let bannedUnder = '';
-		if (punishUserid !== userid) bannedUnder = ' because it has the same IP as banned user: ' + punishUserid;
-		user.send("|popup|Your username (" + user.name + ") is banned" + bannedUnder + "'. Your ban will expire in a few days." + (Config.appealurl ? " Or you can appeal at:\n" + Config.appealurl : ""));
+		user.send(`|popup|Your username (${user.name}) is banned${bannedUnder}. Your ban will expire in a few days.${reason}${appeal}`);
+		user.punishmentNotified = true;
 		Punishments.punish(user, punishment);
 		user.disconnectAll();
 		return;
 	}
 	if (id === 'NAMELOCK' || user.namelocked) {
-		let bannedUnder = '';
-		if (punishUserid !== userid) bannedUnder = ' because it has the same IP as banned user: ' + punishUserid;
-		user.send("|popup|You are namelocked" + bannedUnder + "'. Your namelock will expire in a few days.");
+		user.send(`|popup|You are namelocked and can't have a username${bannedUnder}'. Your namelock will expire in a few days.${reason}${appeal}`);
 		if (punishment[2]) Punishments.punish(user, punishment);
 		user.locked = punishUserid;
 		user.namelocked = punishUserid;
 		user.resetName();
 		user.updateIdentity();
 	} else {
-		let bannedUnder = '';
-		if (punishUserid !== userid) bannedUnder = ' because it has the same IP as banned user: ' + punishUserid;
-		user.send("|popup|Your username (" + user.name + ") is locked" + bannedUnder + "'. Your lock will expire in a few days." + (Config.appealurl ? " Or you can appeal at:\n" + Config.appealurl : ""));
+		if (!user.lockNotified) {
+			user.send(`|popup|You are locked${bannedUnder}. Your lock will expire in a few days.${reason}${appeal}`);
+			user.lockNotified = true;
+		}
 		Punishments.punish(user, punishment);
 		user.locked = punishUserid;
 		user.updateIdentity();
 	}
-	if (user.namelocked) {
-		user.popup("You can't change your name because you're namelocked.");
-		user.resetName();
-		user.updateIdentity();
-	}
-	// if (user.group === Config.groupsranking[0]) {
-	// 	let range = user.locked || Punishments.shortenHost(user.latestHost);
-	// 	if (Punishments.lockedRanges[range]) {
-	// 		user.send("|popup|You are in a range that has been temporarily locked from talking in chats and PMing regular users.");
-	// 		Punishments.rangeLockedUsers[range][user.userid] = 1;
-	// 		user.locked = '#range';
-	// 	}
-	// } else if (user.locked && (user.locked === '#range' || Punishments.lockedRanges[user.locked])) {
-	// 	user.locked = false;
-	// }
 };
 
+/**
+ * @param {User} user
+ * @param {Connection} connection
+ */
 Punishments.checkIp = function (user, connection) {
 	let ip = connection.ip;
 	let punishment = Punishments.ipSearch(ip);
@@ -472,45 +548,39 @@ Punishments.checkIp = function (user, connection) {
 		}
 	}
 
-	Dnsbl.reverse(ip, (err, hosts) => {
-		if (hosts && hosts[0]) {
-			user.latestHost = hosts[0];
-			if (Config.hostfilter) Config.hostfilter(hosts[0], user, connection);
-			if (user.named && !user.locked && user.group === Config.groupsranking[0]) {
-				let shortHost = Punishments.shortenHost(hosts[0]);
-				let punishment = Punishments.hosts.get(shortHost);
-				if (punishment) {
-					user.send("|popup|You are locked because someone on your ISP has spammed, and your ISP does not give us any way to tell you apart from them.");
-					Punishments.rangeLockedUsers[shortHost][user.userid] = 1;
-					user.locked = '#range';
-					user.updateIdentity();
+	Dnsbl.reverse(ip).then(host => {
+		if (host) user.latestHost = host;
+		if (Config.hostfilter) Config.hostfilter(host, user, connection);
+	});
+
+	if (Config.dnsbl) {
+		Dnsbl.query(connection.ip).then(isBlocked => {
+			if (isBlocked) {
+				if (connection.user && !connection.user.locked && !connection.user.autoconfirmed) {
+					connection.user.semilocked = '#dnsbl';
 				}
 			}
-		} else {
-			if (Config.hostfilter) Config.hostfilter('', user, connection);
-		}
-	});
-
-	Dnsbl.query(connection.ip, isBlocked => {
-		if (isBlocked) {
-			if (connection.user && !connection.user.locked && !connection.user.autoconfirmed) {
-				connection.user.semilocked = '#dnsbl';
-			}
-		}
-	});
+		});
+	}
 };
 
-// Connection flood table. Separate table from IP bans.
-let cfloods = new Set();
+/**
+ * Connection flood table. Separate table from IP bans.
+ * @type Set<string>
+ */
+let cfloods = Punishments.cfloods = new Set();
 
 /**
  * IP bans need to be checked separately since we don't even want to
  * make a User object if an IP is banned.
+ *
+ * @param {Connection} connection
+ * @return {?string}
  */
 Punishments.checkIpBanned = function (connection) {
 	let ip = connection.ip;
 	if (cfloods.has(ip) || (Monitor.countConnection(ip) && cfloods.add(ip))) {
-		connection.send("|popup||modal|PS is under heavy load and cannot accommodate your connection right now.");
+		connection.send(`|popup||modal|PS is under heavy load and cannot accommodate your connection right now.`);
 		return '#cflood';
 	}
 
@@ -524,11 +594,12 @@ Punishments.checkIpBanned = function (connection) {
 	if (!banned) return false;
 
 	if (banned === '#ipban') {
-		connection.send("|popup||modal|Your IP (" + ip + ") is not allowed to connect to PS, because it has been used to spam, hack, or otherwise attack our server.||Make sure you are not using any proxies to connect to PS.");
+		connection.send(`|popup||modal|Your IP (${ip}) is not allowed to connect to PS, because it has been used to spam, hack, or otherwise attack our server.||Make sure you are not using any proxies to connect to PS.`);
 	} else {
-		connection.send("|popup||modal|You are banned because you have the same IP (" + ip + ") as banned user '" + banned + "'. Your ban will expire in a few days.||" + (Config.appealurl ? " Or you can appeal at:\n" + Config.appealurl : ""));
+		let appeal = (Config.appealurl ? `||||Or you can appeal at: ${Config.appealurl}` : ``);
+		connection.send(`|popup||modal|You are banned because you have the same IP (${ip}) as banned user '${banned}'. Your ban will expire in a few days.${appeal}`);
 	}
-	if (!Config.quietconsole) console.log('CONNECT BLOCKED - IP BANNED: ' + ip + ' (' + banned + ')');
+	if (!Config.quietconsole) console.log(`CONNECT BLOCKED - IP BANNED: ${ip} (${banned})`);
 
 	return banned;
 };
