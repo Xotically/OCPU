@@ -311,7 +311,9 @@ exports.commands = {
 	richestuser: function (target, room, user) {
 		if (!this.runBroadcast()) return;
 		let display = '<center><u><b>Richest Users</b></u></center><br><table border="1" cellspacing="0" cellpadding="5" width="100%"><tbody><tr><th>Rank</th><th>Username</th><th>Money</th></tr>';
-		let keys = Object.keys(Db('money').object()).map(name => {name: name, money: Db('money').get(name)});
+		let keys = Object.keys(Db('money').object()).map(name => {
+		    return {name: name, money: Db('money').get(name)};
+		});
 		if (!keys.length) return this.sendReplyBox("Money ladder is empty.");
 		keys.sort((a, b) => b.money - a.money);
 		keys.slice(0, 10).forEach((user, index) => {
