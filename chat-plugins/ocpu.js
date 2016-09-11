@@ -542,7 +542,7 @@ exports.commands = {
 		if (!this.runBroadcast()) return;
 		if (!this.canTalk()) return;
 		if (!target) target = toId(user.name);
-		return this.sendReplyBox(nameColor(target, true) + '.  The hexcode for this name color is: ' + /*hashColor*/(target) + '.');
+		return this.sendReplyBox(nameColor(target, true) + '.  The hexcode for this name color is: ' + hashColor(target) + '.');
 	},
 	rsi: 'roomshowimage',
 	roomshowimage: function (target, room, user) {
