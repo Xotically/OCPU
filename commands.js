@@ -1756,7 +1756,7 @@ exports.commands = {
 			for (let entry in dict) delete dict[entry];
 		}
 		this.addModCommand("All bans and locks have been lifted by " + user.name + ".");
-		Rooms.get('staff').add("|raw|<div class=\"broadcast-red\">" + user.name + "has lifted all locks and bans!</div>");
+		Rooms.get('staff').add("|raw|<div class=\"broadcast-red\">" + user.name + " has lifted all locks and bans!</div>");
 		console.log(user.name + " has lifted all locks and bans.");
 	},
 	unbanallhelp: ["/unbanall - Unban all IP addresses. Requires: & ~"],
