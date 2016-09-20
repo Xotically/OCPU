@@ -671,9 +671,10 @@ exports.commands = {
 					"- " + nameColor('zellman01', true) + " (Founder, Sysop, Development, Owner of GitHub repository)<br />" +
 					"<br />" +
 					"<u>Development:</u><br />" +
-					"- " + nameColor('Rainy Thunder', true) + " (Contributor, Lead Development, Lead Policy, Sysop)<br />" +
+					"- " + nameColor('Rainy Thunder', true) + " (Contributor, Lead Development, Lead Policy, Sysop, Community Administrator)<br />" +
 					"- " + nameColor('Mystifi', true) + " (Contributor, Development)<br />" +
 					"- " + nameColor('vaq', true) + " (Contributor, Community Administrator)<br />" +
+					"- " + nameColor('Inactive', true) + " (Development)<br />"
 					"- " + nameColor('Co-Champ Salt', true) + " (Server CSS)<br />" +
 					"<br />" +
 					"<u>Special Thanks:</u><br />" +
