@@ -102,14 +102,14 @@ class RoomSettings {
 		return slowchatOutput.join(" | ");
 	}
 	tourStatus() {
- +		if (!this.user.can('tournamentsmanagement', null, this.room)) return "<button " + DISABLED + ">" + (this.room.toursEnabled ? 'enabled' : 'disabled') + "</button>";
- +
- +		if (this.room.toursEnabled) {
- +			return '<button name="send" value="/roomsetting tournament disable">disable</button> <button ' + DISABLED + '>enabled</button>';
- +		} else {
- +			return '<button ' + DISABLED + '>disable</button> <button name="send" value="/roomsetting tournament enable">enable</button> ';
- +		}
- +	}
+ 		if (!this.user.can('tournamentsmanagement', null, this.room)) return "<button " + DISABLED + ">" + (this.room.toursEnabled ? 'enabled' : 'disabled') + "</button>";
+ 
+ 		if (this.room.toursEnabled) {
+ 			return '<button name="send" value="/roomsetting tournament disable">disable</button> <button ' + DISABLED + '>enabled</button>';
+ 		} else {
+ 			return '<button ' + DISABLED + '>disable</button> <button name="send" value="/roomsetting tournament enable">enable</button> ';
+ 		}
+ 	}
 	generateDisplay(user, room, connection) {
 		let output = '<div class="infobox">Room Settings for ' + Tools.escapeHTML(this.room.title) + '<br />';
 		output += "<u>Modchat:</u> " + this.modchat() + "<br />";
