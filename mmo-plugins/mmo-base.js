@@ -31,9 +31,9 @@ exports.commands = {
 		const def = Db('defence').get(toId(target), 0);
 		let group = user.getIdentity().charAt(0);
 	    
-		this.sendReply("|raw|<font color=#948A88><hr>" + group +  "</font><font color=" + color(user.userid) + "><b>" + Tools.escapeHTML(target) + "</b></font> has <b>" + lvl + levelName(amount) + "</b>.");
-		this.sendReply("|raw|<font color=#948A88>" + group +  "</font><font color=" + color(user.userid) + "><b>" + Tools.escapeHTML(target) + "</b></font> has <b>" + att + attackName(amount) + "</b>.");
-		this.sendReply("|raw|<font color=#948A88>" + group +  "</font><font color=" + color(user.userid) + "><b>" + Tools.escapeHTML(target) + "</b></font> has <b>" + def + defenceName(amount) + "</b>.<hr>");
+		this.sendReply("|raw|<font color=#948A88><hr>- -</font><font color=green><b>" + Tools.escapeHTML(target) + "</b></font> has <b>" + lvl + levelName(amount) + "</b>.");
+		this.sendReply("|raw|<font color=#948A88>- -</font><font color=green><b>" + Tools.escapeHTML(target) + "</b></font> has <b>" + att + attackName(amount) + "</b>.");
+		this.sendReply("|raw|<font color=#948A88>- -</font><font color=green><b>" + Tools.escapeHTML(target) + "</b></font> has <b>" + def + defenceName(amount) + "</b>.<hr>");
 	}
 };
 
