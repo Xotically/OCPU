@@ -74,6 +74,18 @@ for (let file of fs.readdirSync(path.resolve(__dirname, 'chat-plugins'))) {
 	Object.assign(commands, require('./chat-plugins/' + file).commands);
 }
 
+// Adventure Pokemon Showdown MMO Project Thingy
+/*********************************************************
+ * Load MMO files
+ *********************************************************/
+
+Object.assign(commands, require('./mmo-plugins/mmo-base.js').commands);
+
+for (let file of fs.readdirSync(path.resolve(__dirname, 'mmo-plugins'))) {
+	if (file.substr(-3) !== '.js' || file === 'mmo-base.js') continue;
+    Object.assign(commands, require('./mmo-plugins/' + file).commands);
+}
+
 /*********************************************************
  * Parser
  *********************************************************/
