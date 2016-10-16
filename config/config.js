@@ -356,6 +356,24 @@ exports.grouplist = [
 		minigame: true,
 	},
 	{
+		symbol: 'ϟ',
+		id: 'oblivion',
+		name: 'Oblivion',
+		roomonly: true,
+	},
+	{
+		symbol: '➳',
+		id: 'slayer',
+		name: 'Slayer',
+		roomonly: true,
+	},
+	{
+		symbol: '✫',
+		id: 'adventurer',
+		name: 'Adventurer',
+		roomonly: true,
+	},
+	{
 		symbol: '\u2605',
 		id: "player",
 		name: "Player",
