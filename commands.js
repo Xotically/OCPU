@@ -1656,10 +1656,12 @@ exports.commands = {
 	},
 	unlockhelp: ["/unlock [username] - Unlocks the user. Requires: % @ * & ~"],
 
-	forceban: 'ban',
-	b: 'ban',
-	ban: function (target, room, user, connection, cmd) {
-		if (!target) return this.parse('/help ban');
+	forceglobalban: 'globalban',
+	gban: 'globalban',
+	ban: 'globalban',
+	forceban: 'globalban',
+	globalban: function (target, room, user, connection, cmd) {
+		if (!target) return this.parse('/help globalban');
 
 		target = this.splitTarget(target);
 		let targetUser = this.targetUser;
@@ -1667,25 +1669,23 @@ exports.commands = {
 		if (target.length > MAX_REASON_LENGTH) {
 			return this.errorReply("The reason is too long. It cannot exceed " + MAX_REASON_LENGTH + " characters.");
 		}
+		if (!target) {
+			return this.errorReply("Global bans require a reason.");
+		}
 		if (!this.can('ban', targetUser)) return false;
 		let name = targetUser.getLastName();
 		let userid = targetUser.getLastId();
 
-		if (Punishments.getPunishType(userid) === 'BANNED' && !target && !targetUser.connected) {
-			let problem = " but was already banned";
-			return this.privateModCommand("(" + name + " would be banned by " + user.name + problem + ".)");
-		}
-
 		if (targetUser.confirmed) {
-			if (cmd === 'forceban') {
+			if (cmd === 'forceglobalban') {
 				let from = targetUser.deconfirm();
-				Monitor.log("[CrisisMonitor] " + name + " was banned by " + user.name + " and demoted from " + from.join(", ") + ".");
+				Monitor.log("[CrisisMonitor] " + name + " was globally banned by " + user.name + " and demoted from " + from.join(", ") + ".");
 				this.globalModlog("CRISISDEMOTE", targetUser, " from " + from.join(", "));
 			} else {
-				return this.sendReply("" + name + " is a confirmed user. If you are sure you would like to ban them use /forceban.");
+				return this.sendReply("" + name + " is a confirmed user. If you are sure you would like to ban them use /forceglobalban.");
 			}
-		} else if (cmd === 'forceban') {
-			return this.errorReply("Use /ban; " + name + " is not a confirmed user.");
+		} else if (cmd === 'forceglobalban') {
+			return this.errorReply("Use /globalban; " + name + " is not a confirmed user.");
 		}
 
 		// Destroy personal rooms of the banned user.
@@ -1697,9 +1697,9 @@ exports.commands = {
 			}
 		});
 
-		targetUser.popup("|modal|" + user.name + " has banned you." + (target ? "\n\nReason: " + target : "") + (Config.appealurl ? "\n\nIf you feel that your ban was unjustified, you can appeal:\n" + Config.appealurl : "") + "\n\nYour ban will expire in a few days.");
+		targetUser.popup("|modal|" + user.name + " has globally banned you." + (target ? "\n\nReason: " + target : "") + (Config.appealurl ? "\n\nIf you feel that your ban was unjustified, you can appeal:\n" + Config.appealurl : "") + "\n\nYour ban will expire in a few days.");
 
-		this.addModCommand("" + name + " was banned by " + user.name + "." + (target ? " (" + target + ")" : ""), " (" + targetUser.latestIp + ")");
+		this.addModCommand("" + name + " was globally banned by " + user.name + "." + (target ? " (" + target + ")" : ""), " (" + targetUser.latestIp + ")");
 		let alts = targetUser.getAlts();
 		let acAccount = (targetUser.autoconfirmed !== userid && targetUser.autoconfirmed);
 		if (alts.length) {
@@ -1718,25 +1718,25 @@ exports.commands = {
 		if (userid !== toId(this.inputUsername)) this.add('|unlink|hide|' + toId(this.inputUsername));
 		Punishments.ban(targetUser, null, null, target);
 		this.globalModlog("BAN", targetUser, " by " + user.name + (target ? ": " + target : ""));
-		console.log("BAN", targetUser, " by " + user.name + (target ? ": " + target : ""));
 		return true;
 	},
-	banhelp: ["/ban OR /b [username], [reason] - Kick user from all rooms and ban user's IP address with reason. Requires: @ * & ~"],
+	globalbanhelp: ["/globalban OR /gb OR /ban [username], [reason] - Kick user from all rooms and ban user's IP address with reason. Requires: @ * & ~"],
 
-	unban: function (target, room, user) {
-		if (!target) return this.parse('/help unban');
+	unban: 'unglobalban',
+	unglobalban: function (target, room, user) {
+		if (!target) return this.parse('/help unglobalban');
 		if (!this.can('ban')) return false;
 
 		let name = Punishments.unban(target);
 
 		if (name) {
-			this.addModCommand("" + name + " was unbanned by " + user.name + ".");
+			this.addModCommand("" + name + " was globally unbanned by " + user.name + ".");
 			this.globalModlog("UNBAN", name, " by " + user.name);
 		} else {
-			this.errorReply("User '" + target + "' is not banned.");
+			this.errorReply("User '" + target + "' is not globally banned.");
 		}
 	},
-	unbanhelp: ["/unban [username] - Unban a user. Requires: @ * & ~"],
+	unglobalbanhelp: ["/unglobalban OR /unban [username] - Unban a user. Requires: @ * & ~"],
 
 	unbanall: function (target, room, user) {
 		if (!this.can('rangeban')) return false;
@@ -2044,11 +2044,7 @@ exports.commands = {
 		if (room.battle && !room.modchat && !user.can('modchat')) room.requestModchat(null);
 		this.privateModCommand("(" + user.name + " set modchat to " + room.modchat + ")");
 
-		if (room.modchat == false) {
-			Rooms.get('staff').add('|raw|<div class="broadcast-green">' + user.name + ' has disabled modchat in ' + room.id + '.</div>').update();
-		} else if (room.modchat == 'autoconfirmed' || room.modchat == '+' || room.modchat == '★' || room.modchat == '%' || room.modchat == '@' || room.modchat == '*' || room.modchat == '&' || room.modchat == '#') {
-			Rooms.get('staff').add('|raw|<div class="broadcast-blue">' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>').update();
-		} else if (room.modchat == '~') {
+		if (room.modchat == '~') {
 			Rooms.get('staff').add('|raw|<div class="broadcast-red">' + user.name + ' has set modchat to ' + room.modchat + ' in ' + room.id + '.</div>').update();
 		}
 		
@@ -2384,6 +2380,126 @@ exports.commands = {
 	banwordhelp: ["/banword add [words] - Adds the comma-separated list of phrases (& or ~ can also input regex) to the banword list of the current room. Requires: # & ~",
 					"/banword delete [words] - Removes the comma-separated list of phrases from the banword list. Requires: # & ~",
 					"/banword list - Shows the list of banned words in the current room. Requires: @ * # & ~"],
+	
+	ab: 'blacklist',
+	blacklist: function (target, room, user) {
+		if (!target) return this.parse('/help blacklist');
+		if (!this.canTalk()) return this.errorReply("You cannot do this while unable to talk.");
+
+		target = this.splitTarget(target);
+		const targetUser = this.targetUser;
+		if (!targetUser) return this.errorReply("User '" + this.targetUsername + "' not found.");
+		if (!this.can('editroom', targetUser, room)) return false;
+		if (!room.chatRoomData) {
+			return this.errorReply("This room is not going to last long enough for a blacklist to matter - just ban the user");
+		}
+		if (target.length > MAX_REASON_LENGTH) {
+			return this.errorReply("The reason is too long. It cannot exceed " + MAX_REASON_LENGTH + " characters.");
+		}
+		if (!target) {
+			return this.errorReply("Blacklists require a reason.");
+		}
+		const name = targetUser.getLastName();
+		const userid = targetUser.getLastId();
+
+		if (targetUser.confirmed && room.isPrivate !== true) {
+			Monitor.log("[CrisisMonitor] Confirmed user " + targetUser.name + (targetUser.confirmed !== targetUser.userid ? " (" + targetUser.confirmed + ")" : "") + " was blacklisted from " + room.id + " by " + user.name + ", and should probably be demoted.");
+		}
+
+		if (targetUser in room.users || user.can('lock')) {
+			targetUser.popup(
+				"|modal||html|<p>" + Tools.escapeHTML(user.name) + " has blacklisted you from the room " + room.id + ".</p>" + (target ? "<p>Reason: " + Tools.escapeHTML(target) + "</p>" : "") +
+				"<p>To appeal the ban, PM the staff member that blacklisted you" + (!room.battle && room.auth ? " or a room owner. </p><p><button name=\"send\" value=\"/roomauth " + room.id + "\">List Room Staff</button></p>" : ".</p>")
+			);
+		}
+
+		this.addModCommand("" + name + " was blacklisted by " + user.name + "." + (target ? " (" + target + ")" : ""), " (" + targetUser.latestIp + ")");
+		if (!room.isPrivate && room.chatRoomData) {
+			let alts = targetUser.getAlts();
+			let acAccount = (targetUser.autoconfirmed !== userid && targetUser.autoconfirmed);
+			if (alts.length) {
+				this.privateModCommand("(" + name + "'s " + (acAccount ? " ac account: " + acAccount + ", " : "") + "blacklisted alts: " + alts.join(", ") + ")");
+			} else if (acAccount) {
+				this.privateModCommand("(" + name + "'s ac account: " + acAccount + ")");
+			}
+		}
+		this.add('|unlink|hide|' + userid);
+		if (userid !== toId(this.inputUsername)) this.add('|unlink|hide|' + toId(this.inputUsername));
+
+		if (!room.isPrivate && room.chatRoomData) {
+			this.globalModlog("BLACKLIST", targetUser, " by " + user.name + (target ? ": " + target : ""));
+		}
+		Punishments.roomBlacklist(room, targetUser, null, null, target);
+		return true;
+	},
+	blacklisthelp: ["/blacklist [username], [reason] - Blacklists the user from the room you are in for a year. Requires: # & ~"],
+
+	unab: 'unblacklist',
+	unblacklist: function (target, room, user) {
+		if (!target) return this.parse('/help unblacklist');
+		if (!this.can('editroom', null, room)) return false;
+
+		const name = Punishments.roomUnblacklist(room, target);
+
+		if (name) {
+			this.addModCommand("" + name + " was unblacklisted by " + user.name + ".");
+			if (!room.isPrivate && room.chatRoomData) {
+				this.globalModlog("UNBLACKLIST", name, " by " + user.name);
+			}
+		} else {
+			this.errorReply("User '" + target + "' is not blacklisted.");
+		}
+	},
+	unblacklisthelp: ["/unblacklist [username] - Unblacklists the user from the room you are in. Requires: # & ~"],
+
+	showbl: 'showblacklist',
+	showblacklist: function (target, room, user) {
+		if (!this.can('mute', null, room)) return false;
+
+		if (!user.can('ban', null, room)) return;
+		if (!room.chatRoomData) return this.errorReply("This room does not support blacklists.");
+
+		const subMap = Punishments.roomUserids.get(room.id);
+		if (!subMap) {
+			return this.sendReply("This room has no blacklisted users.");
+		}
+		let blMap = new Map();
+		let ips = '';
+
+		subMap.forEach((punishment, userid) => {
+			const [punishType, id, expireTime] = punishment;
+			if (punishType === 'BLACKLIST') {
+				if (!blMap.has(id)) blMap.set(id, [expireTime]);
+				if (id !== userid) blMap.get(id).push(userid);
+			}
+		});
+
+		if (user.can('ban')) {
+			const subMap = Punishments.roomIps.get(room.id);
+			ips = '/ips';
+			subMap.forEach((punishment, ip) => {
+				const [punishType, id] = punishment;
+				if (punishType === 'BLACKLIST') {
+					if (!blMap.has(id)) blMap.set(id, []);
+					blMap.get(id).push(ip);
+				}
+			});
+		}
+
+		let buf = `Blacklist for room ${room.id}:<br />`;
+
+		blMap.forEach((data, userid) => {
+			const [expireTime, ...alts] = data;
+			const expiresIn = new Date(expireTime).getTime() - Date.now();
+			const expiresDays = Math.round(expiresIn / 1000 / 60 / 60 / 24);
+			buf += `- <strong>${userid}</strong>, for ${expiresDays} day${Tools.plural(expiresDays)}`;
+			if (alts.length) buf += `, alts${ips}: ${alts.join(', ')}`;
+			buf += `<br />`;
+		});
+
+		this.sendReplyBox(buf);
+	},
+	showblacklishelp: ["/showblacklist OR /showbl - show a list of blacklisted users in the room"],
 
 	modlog: function (target, room, user, connection) {
 		let lines = 0;
@@ -2524,9 +2640,9 @@ exports.commands = {
 		if (!this.can('hotpatch')) return false;
 		if (Monitor.hotpatchLock) return this.errorReply("Hotpatch is currently been disabled. (" + Monitor.hotpatchLock + ")");
 
-		for (let roomid of ['development', 'staff', 'upperstaff']) {
+		for (let roomid of ['development']) {
 			let curRoom = Rooms(roomid);
-			if (curRoom) curRoom.add("|c|~|(" + user.name + " used /hotpatch " + target + ")").update();
+			if (curRoom) curRoom.add("|c|~Server| " + user.name + "  used /hotpatch " + target + ".").update();
 		}
 
 		try {
@@ -2649,7 +2765,11 @@ exports.commands = {
 		Rooms.global.lockdown = true;
 		Rooms.rooms.forEach((curRoom, id) => {
 			if (id === 'global') return;
-			curRoom.addRaw("<div class=\"broadcast-red\"><b>The server is restarting soon.</b><br />Please finish your battles quickly. No new battles can be started until the server resets in a few minutes.</div>").update();
+			if (!target) {
+				curRoom.addRaw("<div class=\"broadcast-red\"><b>The server is restarting soon.</b><br />Please finish your battles quickly. No new battles can be started until the server resets in a few minutes.</div>").update();
+			} else {
+				curRoom.addRaw("<div class=\"broadcast-red\"><b>The server is restarting soon for " + target + ".</b><br />Please finish your battles quickly. No new battles can be started until the server resets in a few minutes.</div>").update();
+			}
 			if (curRoom.requestKickInactive && !curRoom.battle.ended) {
 				curRoom.requestKickInactive(user, true);
 				if (curRoom.modchat !== '+') {
@@ -2660,6 +2780,11 @@ exports.commands = {
 		});
 
 		this.logEntry(user.name + " used /lockdown");
+		if (!target) {
+			console.log(user.name + " has put the server under lockdown");
+		} else {
+			console.log(user.name + " has put the server under lockdown because of " + target + ".");
+		}
 	},
 	lockdownhelp: ["/lockdown - locks down the server, which prevents new battles from starting so that the server can eventually be restarted. Requires: ~"],
 
